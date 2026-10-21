@@ -1,7 +1,7 @@
 // =======================================================
-// WEBSITE NAME (NICKNAME)
+// WEBSITE NAME (AminX Topup)
 // =======================================================
-var website_name = "YASIN";
+var website_name = "AminX Topup";
 
 // =======================================================
 // TELEGRAM CHANNEL LINK
