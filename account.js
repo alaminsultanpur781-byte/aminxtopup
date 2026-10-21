@@ -6,17 +6,17 @@ var website_name = "AminX Topup";
 // =======================================================
 // TELEGRAM CHANNEL LINK
 // =======================================================
-var telegram_channel_link = "telegram channel link";
+var telegram_channel_link = "https://t.me/alamintg";
 
 // =======================================================
 // TELEGRAM GROUP LINK
 // =======================================================
-var telegram_group_link = "telegram group link";
+var telegram_group_link = "https://t.me/AMFFIDINFO_BOT";
 
 // =======================================================
 // YOUTUBE CHANNEL LINK
 // =======================================================
-var youtube_channel_link = "YouTube channel link";
+var youtube_channel_link = "https://www.youtube.com/@%E0%A6%B0%E0%A6%B9%E0%A6%AE%E0%A6%A4%E0%A7%87%E0%A6%B0%E0%A6%9A%E0%A6%BE%E0%A6%A6%E0%A6%B0";
 
 // =======================================================
 // NOTIFICATION TEXT
