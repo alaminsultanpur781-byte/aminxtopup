@@ -4,6 +4,11 @@
 var website_name = "AminX Topup";
 
 // =======================================================
+// WHATSAPP_LINK
+// =======================================================
+var whatsapp_link = "https://wa.me/8801862697277?text=Hello";
+
+// =======================================================
 // TELEGRAM CHANNEL LINK
 // =======================================================
 var telegram_channel_link = "https://t.me/alamintg";
