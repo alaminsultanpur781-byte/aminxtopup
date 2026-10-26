@@ -11,7 +11,7 @@
 <link rel="shortcut icon" href="Main logo.jpg">
 <link rel="apple-touch-icon" href="Main logo.jpg">
 <meta property="og:image" content="Main logo.jpg">
-<title>Nickname</title>
+<title>AMINX-TOPUP</title>
 <script>
 // =======================================================
 // INSTANT CONFIG LOADER & CACHE-BUSTER (Render Live Update)
@@ -1383,6 +1383,7 @@ function syncAccountLinks() {
   var tgCh = (typeof telegram_channel_link !== 'undefined' ? telegram_channel_link : (window.ACCOUNT_CONFIG && window.ACCOUNT_CONFIG.telegramChannel) || '').trim();
   var tgGrp = (typeof telegram_group_link !== 'undefined' ? telegram_group_link : (window.ACCOUNT_CONFIG && window.ACCOUNT_CONFIG.telegramGroup) || '').trim();
   var ytCh = (typeof youtube_channel_link !== 'undefined' ? youtube_channel_link : (window.ACCOUNT_CONFIG && window.ACCOUNT_CONFIG.youtubeChannel) || '').trim();
+  var walink = (typeof whatsapp_link !== 'undefined' ? whatsapp_link : (window.ACCOUNT_CONFIG && window.ACCOUNT_CONFIG.whatsapplink) || '').trim();
 
   function sanitize(url, placeholder) {
     if (!url || url === placeholder || url === '#' || (url.indexOf(' ') !== -1 && !url.startsWith('http'))) {
@@ -1397,7 +1398,8 @@ function syncAccountLinks() {
   var validTgCh = sanitize(tgCh, 'telegram channel link');
   var validTgGrp = sanitize(tgGrp, 'telegram group link');
   var validYtCh = sanitize(ytCh, 'YouTube channel link');
-
+  var validwalink = sanitize(walink, 'whatsapp link');
+  
   function bindLinks(selector, url) {
     document.querySelectorAll(selector).forEach(function(el) {
       if (url) {
@@ -1413,7 +1415,8 @@ function syncAccountLinks() {
 
   bindLinks('[data-link="telegram-channel"]', validTgCh);
   bindLinks('[data-link="telegram-group"]', validTgGrp);
-  bindLinks('[data-link="youtube-channel"]', validYtCh);
+  bindLinks('[data-link="youtube_channel_link"]', validYtCh);
+  bindLinks('[data-link="whatsapp-link"]', validYtCh);
 
   // নোটিফিকেশন পপআপের লেখা (account.js এর notification_text)
   var note = (typeof notification_text !== 'undefined' ? notification_text : (window.notification_text || '')).toString();
@@ -1458,6 +1461,7 @@ function fetchFreshAccountConfig() {
         'telegram_channel_link: (typeof telegram_channel_link !== "undefined" ? telegram_channel_link : null),' +
         'telegram_group_link: (typeof telegram_group_link !== "undefined" ? telegram_group_link : null),' +
         'youtube_channel_link: (typeof youtube_channel_link !== "undefined" ? youtube_channel_link : null),' +
+        'whatsapp_link: (typeof whatsapp_link !== "undefined" ? whatsapp_link : null),' +
         'notification_text: (typeof notification_text !== "undefined" ? notification_text : null)' +
       '};');
       var cfg = runner();
@@ -1466,6 +1470,7 @@ function fetchFreshAccountConfig() {
         if (cfg.telegram_channel_link !== null) window.telegram_channel_link = cfg.telegram_channel_link;
         if (cfg.telegram_group_link !== null) window.telegram_group_link = cfg.telegram_group_link;
         if (cfg.youtube_channel_link !== null) window.youtube_channel_link = cfg.youtube_channel_link;
+        if (cfg.whatsapp_link !== null) window.whatsapp_link = cfg.whatsapp_link;
         if (cfg.notification_text !== null) window.notification_text = cfg.notification_text;
         parsed = true;
       }
@@ -1482,12 +1487,14 @@ function fetchFreshAccountConfig() {
       var tgCh = extractProp('telegram_channel_link');
       var tgGrp = extractProp('telegram_group_link');
       var ytCh = extractProp('youtube_channel_link');
+      var walink = extractProp('whatsapp_link'):
       var note = extractProp('notification_text');
 
       if (name !== null) window.website_name = name;
       if (tgCh !== null) window.telegram_channel_link = tgCh;
       if (tgGrp !== null) window.telegram_group_link = tgGrp;
       if (ytCh !== null) window.youtube_channel_link = ytCh;
+      if (walink !== null) window.whatsapp_link = walink;
       if (note !== null) window.notification_text = note;
     }
 
