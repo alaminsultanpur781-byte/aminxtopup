@@ -190,7 +190,7 @@ main.sm{max-width:520px;padding:0}
 <symbol id="wal" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h13v3"/><path d="M3 7v11a2 2 0 0 0 2 2h14a1 1 0 0 0 1-1V9H5a2 2 0 0 1-2-2z"/><circle cx="16" cy="14.5" r="1.3" fill="currentColor"/></symbol>
 <symbol id="user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.5-7 8-7s8 3 8 7"/></symbol>
 <symbol id="tg" viewBox="0 0 24 24"><path d="M21.5 3.2 2.7 10.6c-1 .4-1 1.2-.2 1.4l4.8 1.5 1.8 5.6c.2.6.4.8.9.8.4 0 .6-.2.9-.4l2.3-2.2 4.7 3.5c.9.5 1.5.2 1.7-.8l3.1-14.8c.3-1.2-.5-1.8-1.2-1.5zM8.4 13l9.2-5.8c.4-.3.8-.1.5.2l-7.6 6.9-.3 3.2z"/></symbol>
-<symbol id="wa" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.2"/><circle cx="5.5" cy="9.5" r="2.3"/><circle cx="18.5" cy="9.5" r="2.3"/><path d="M12 12.5c-3 0-5.5 1.7-5.5 4V19h11v-2.5c0-2.3-2.5-4-5.5-4zM5.5 12.5C3.5 12.5 2 13.7 2 15.3V17h3.5v-1.5c0-1 .4-1.9 1.1-2.6-.3-.3-.7-.4-1.1-.4zM18.5 12.5c-.4 0-.8.1-1.1.4.7.7 1.1 1.6 1.1 2.6V17H22v-1.7c0-1.6-1.5-2.8-3.5-2.8z"/></symbol>
+<symbol id="grp" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.2"/><circle cx="5.5" cy="9.5" r="2.3"/><circle cx="18.5" cy="9.5" r="2.3"/><path d="M12 12.5c-3 0-5.5 1.7-5.5 4V19h11v-2.5c0-2.3-2.5-4-5.5-4zM5.5 12.5C3.5 12.5 2 13.7 2 15.3V17h3.5v-1.5c0-1 .4-1.9 1.1-2.6-.3-.3-.7-.4-1.1-.4zM18.5 12.5c-.4 0-.8.1-1.1.4.7.7 1.1 1.6 1.1 2.6V17H22v-1.7c0-1.6-1.5-2.8-3.5-2.8z"/></symbol>
 <symbol id="yt" viewBox="0 0 24 24"><path d="M21.6 7.2a2.5 2.5 0 0 0-1.8-1.8C18.2 5 12 5 12 5s-6.200 0-7.800.4a2.500 2.500 0 0 0-1.800 1.800C2 8.800 2 12 2 12s0 3.200.4 4.800a2.500 2.500 0 0 0 1.800 1.800C5.800 19 12 19 12 19s6.200 0 7.800-.4a2.500 2.500 0 0 0 1.800-1.800c.4-1.600.4-4.800.4-4.800s0-3.200-.4-4.800zM10 15V9l5.200 3z"/></symbol>
 </svg>
 
@@ -420,7 +420,7 @@ function imageCard(o){
 }
 
 var siteRoot=null,prevIdx=0;
-var QDEF=['Telegram','whatsapp','YouTube'],QICON=['tg','wa','yt'],QNAME=['Telegram button','whatsapp button','YouTube button'];
+var QDEF=['Telegram','Join Group','YouTube'],QICON=['tg','grp','yt'],QNAME=['Telegram button','Join Group button','YouTube button'];
 function svgi(id,fill){return '<svg class="'+(fill?'s-f':'s-i')+'"><use href="#'+id+'"/></svg>'}
 function pen(label,id,inset){return '<button type="button" class="pen'+(inset?' in':'')+'" data-edit="'+id+'" aria-label="'+esc(label)+'">'+icon('pen')+'</button>'}
 
@@ -568,23 +568,12 @@ function editQuick(i){
     };
   });
 }
-  
+
 function editFF(){
   openSheet('Edit FF Likes',function(b){
     b.appendChild(imageCard({
       key:'ffBanner',title:'FF Likes Picture',round:false,maxDim:800,square:true,
       desc:'This image is shown on the "FF Likes" card on the home page and at the top of the inner page. It is cropped to a square (1:1) automatically.',
-      hint:'A square image works best',
-      after:function(){drawSite()}
-    }));
-  });
-}
-  
-function editFF(){
-  openSheet('Edit UID TOPUP(BD)',function(b){
-    b.appendChild(imageCard({
-      key:'ffBanner',title:'UID TOPUP(BD)Picture',round:false,maxDim:800,square:true,
-      desc:'This image is shown on the "UID TOPUP(BD)" card on the home page and at the top of the inner page. It is cropped to a square (1:1) automatically.',
       hint:'A square image works best',
       after:function(){drawSite()}
     }));
