@@ -288,35 +288,8 @@ async function enter(){
 }
 
 var SECTIONS=[
-  {id:'site',title:'Site Editor',icon:'edit',render:renderSite},
-  {id:'full',title:'Full Website Editor',icon:'code',render:renderFullEditor}
+  {id:'site',title:'Site Editor',icon:'edit',render:renderSite}
 ];
-
-function renderFullEditor(root){
-  root.innerHTML='<div class="topbar"><button type="button" class="ib" id="fullBack" aria-label="Back">'+icon('back','width:16px;height:16px')+'</button><b>Full Website Editor</b></div>'+
-    '<div class="card" style="padding:16px;margin:12px 0">'+
-    '<h3 style="margin-bottom:8px">A–Z HTML Editor</h3>'+
-    '<p class="d" style="margin-bottom:12px">Edit the complete FFX.html source, including every logo, image, link, text, section, CSS and JavaScript. Your original website is not changed until you download this file and replace FFX.html in your hosting/GitHub project.</p>'+
-    '<div class="btns" style="flex-wrap:wrap;margin-bottom:12px">'+
-    '<label class="btn ghost" for="fullFile">Open FFX.html</label><input id="fullFile" type="file" accept=".html,text/html" hidden>'+
-    '<button type="button" class="btn ghost" id="fullLoad">Load live FFX.html</button>'+
-    '<button type="button" class="btn ghost" id="fullLinks">List all links/assets</button>'+
-    '<button type="button" class="btn" id="fullDownload">Download edited FFX.html</button></div>'+
-    '<div id="fullStatus" class="d" style="margin-bottom:8px">No file loaded yet. Upload your FFX.html or load it from this site.</div>'+
-    '<textarea id="fullSource" spellcheck="false" autocapitalize="off" autocomplete="off" style="width:100%;min-height:58vh;resize:vertical;font:12px/1.55 ui-monospace,SFMono-Regular,Consolas,monospace;padding:12px;border:1px solid var(--bd);border-radius:10px;background:#0b1020;color:#dbeafe"></textarea>'+
-    '<div id="fullAssets" style="margin-top:12px"></div>'+
-    '<div class="btns" style="flex-wrap:wrap;margin-top:12px"><button type="button" class="btn ghost" id="fullPreview">Preview HTML</button><button type="button" class="btn ghost" id="fullReset">Clear editor</button></div>'+
-    '</div>';
-  $('#fullBack',root).onclick=function(){show('site')};
-  var src=$('#fullSource',root),status=$('#fullStatus',root),assetBox=$('#fullAssets',root);
-  function setSource(s,name){src.value=s;status.textContent=(name||'HTML loaded')+' • '+s.length.toLocaleString()+' characters';assetBox.innerHTML='';}
-  $('#fullFile',root).onchange=function(){var file=this.files&&this.files[0];this.value='';if(!file)return;var r=new FileReader();r.onload=function(){setSource(String(r.result||''),file.name)};r.onerror=function(){status.textContent='Could not read file'};r.readAsText(file)};
-  $('#fullLoad',root).onclick=async function(){var btn=this;btn.disabled=true;status.textContent='Loading FFX.html…';try{var r=await fetch('/FFX.html?edit='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error('HTTP '+r.status);setSource(await r.text(),'Live FFX.html')}catch(e){status.textContent='Could not load automatically. Use “Open FFX.html” to upload the file.'}finally{btn.disabled=false}};
-  $('#fullDownload',root).onclick=function(){var text=src.value;if(!text.trim()){toast('Load or paste FFX.html first','bad');return}var blob=new Blob([text],{type:'text/html;charset=utf-8'});var url=URL.createObjectURL(blob);var link=document.createElement('a');link.href=url;link.download='FFX.html';document.body.appendChild(link);link.click();link.remove();setTimeout(function(){URL.revokeObjectURL(url)},1000);toast('Edited FFX.html downloaded','ok')};
-  $('#fullLinks',root).onclick=function(){var text=src.value;if(!text.trim()){toast('Load FFX.html first','bad');return}var vals=[];var re=/(?:href|src|poster|content)\s*=\s*(["'])(.*?)\1/gi,m;while((m=re.exec(text))!==null){var v=m[2].trim();if(v&&!vals.includes(v))vals.push(v)}assetBox.innerHTML='<h4 style="margin-bottom:8px">Found links & assets ('+vals.length+')</h4>'+vals.map(function(v){return '<div style="padding:7px 0;border-bottom:1px solid var(--bd);word-break:break-all;font-size:12px">'+esc(v)+'</div>'}).join('')};
-  $('#fullPreview',root).onclick=function(){if(!src.value.trim()){toast('Load FFX.html first','bad');return}var w=window.open('about:blank','_blank');if(!w){toast('Allow pop-ups to preview','bad');return}w.document.open();w.document.write(src.value);w.document.close()};
-  $('#fullReset',root).onclick=function(){if(confirm('Clear the editor contents?')){src.value='';status.textContent='Editor cleared';assetBox.innerHTML=''}};
-}
 
 function openMenu(){
   openSheet('Menu',function(b){
