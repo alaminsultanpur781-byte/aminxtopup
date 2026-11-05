@@ -546,19 +546,16 @@ function editQuick(i){
   openSheet('Edit '+QNAME[i],function(b){
     b.innerHTML='<p class="d">Change the button text and link. If the link is left empty, the previous link stays.</p>'+
       '<label class="lb">Button text</label><input class="inp" id="qLab" maxlength="30" value="'+esc(cur.label)+'" placeholder="'+esc(QDEF[i])+'">'+
-      '<label class="lb">Link</label><input class="inp" id="qUrl" inputmode="url" autocapitalize="off" value="'+esc(cur.url)+'" placeholder="https://...">'+
-      '<label class="lb">Icon style</label><select class="inp" id="qIcon"><option value="default">Default icon</option><option value="telegram">Telegram</option><option value="whatsapp">WhatsApp</option><option value="youtube">YouTube</option></select>'+
-      '<label class="lb">Custom emoji (optional)</label><input class="inp" id="qEmoji" maxlength="8" value="'+esc(cur.emoji||'')+'" placeholder="📱 or leave blank">'+
+      '<label class="lb">Link</label><input class="inp" id="qUrl" inputmode="url" autocapitalize="off" value="'+esc(cur.url)+'" placeholder="https://t.me/...">'+
       '<p class="d" style="margin-top:8px;font-size:12px">This link also applies to the same button elsewhere on the site (helpline, contact page).</p>'+
       '<div class="btns" style="margin-top:6px">'+
         '<button type="button" class="btn" id="qSave">'+icon('save','width:16px;height:16px')+'Save</button>'+
         (state.cfg.quickCustom?'<button type="button" class="btn ghost" id="qReset">'+icon('undo','width:16px;height:16px')+'Default</button>':'')+
       '</div>';
-    $('#qIcon',b).value=cur.icon||'default';
     $('#qSave',b).onclick=async function(){
       var btn=this,old=btn.innerHTML;btn.disabled=true;btn.innerHTML='<span class="spin"></span>';
       var items=state.cfg.quick.map(function(x){return {label:x.label,url:x.url}});
-      items[i]={label:$('#qLab',b).value.trim()||QDEF[i],url:$('#qUrl',b).value.trim(),icon:$('#qIcon',b).value,emoji:$('#qEmoji',b).value.trim()};
+      items[i]={label:$('#qLab',b).value.trim()||QDEF[i],url:$('#qUrl',b).value.trim()};
       try{
         state.cfg=await api('/api/admin/quick',{items:items});
         drawSite();closeSheet();toast('Saved, the website is updated','ok');
