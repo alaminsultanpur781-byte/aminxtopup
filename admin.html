@@ -288,35 +288,8 @@ async function enter(){
 }
 
 var SECTIONS=[
-  {id:'site',title:'Site Editor',icon:'edit',render:renderSite},
-  {id:'full',title:'Full Website Editor',icon:'code',render:renderFullEditor}
+  {id:'site',title:'Site Editor',icon:'edit',render:renderSite}
 ];
-
-function renderFullEditor(root){
-  root.innerHTML='<div class="topbar"><button type="button" class="ib" id="fullBack" aria-label="Back">'+icon('back','width:16px;height:16px')+'</button><b>Full Website Editor</b></div>'+
-    '<div class="card" style="padding:16px;margin:12px 0">'+
-    '<h3 style="margin-bottom:8px">A–Z HTML Editor</h3>'+
-    '<p class="d" style="margin-bottom:12px">Edit the complete FFX.html source, including every logo, image, link, text, section, CSS and JavaScript. Your original website is not changed until you download this file and replace FFX.html in your hosting/GitHub project.</p>'+
-    '<div class="btns" style="flex-wrap:wrap;margin-bottom:12px">'+
-    '<label class="btn ghost" for="fullFile">Open FFX.html</label><input id="fullFile" type="file" accept=".html,text/html" hidden>'+
-    '<button type="button" class="btn ghost" id="fullLoad">Load live FFX.html</button>'+
-    '<button type="button" class="btn ghost" id="fullLinks">List all links/assets</button>'+
-    '<button type="button" class="btn" id="fullDownload">Download edited FFX.html</button></div>'+
-    '<div id="fullStatus" class="d" style="margin-bottom:8px">No file loaded yet. Upload your FFX.html or load it from this site.</div>'+
-    '<textarea id="fullSource" spellcheck="false" autocapitalize="off" autocomplete="off" style="width:100%;min-height:58vh;resize:vertical;font:12px/1.55 ui-monospace,SFMono-Regular,Consolas,monospace;padding:12px;border:1px solid var(--bd);border-radius:10px;background:#0b1020;color:#dbeafe"></textarea>'+
-    '<div id="fullAssets" style="margin-top:12px"></div>'+
-    '<div class="btns" style="flex-wrap:wrap;margin-top:12px"><button type="button" class="btn ghost" id="fullPreview">Preview HTML</button><button type="button" class="btn ghost" id="fullReset">Clear editor</button></div>'+
-    '</div>';
-  $('#fullBack',root).onclick=function(){show('site')};
-  var src=$('#fullSource',root),status=$('#fullStatus',root),assetBox=$('#fullAssets',root);
-  function setSource(s,name){src.value=s;status.textContent=(name||'HTML loaded')+' • '+s.length.toLocaleString()+' characters';assetBox.innerHTML='';}
-  $('#fullFile',root).onchange=function(){var file=this.files&&this.files[0];this.value='';if(!file)return;var r=new FileReader();r.onload=function(){setSource(String(r.result||''),file.name)};r.onerror=function(){status.textContent='Could not read file'};r.readAsText(file)};
-  $('#fullLoad',root).onclick=async function(){var btn=this;btn.disabled=true;status.textContent='Loading FFX.html…';try{var r=await fetch('/FFX.html?edit='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error('HTTP '+r.status);setSource(await r.text(),'Live FFX.html')}catch(e){status.textContent='Could not load automatically. Use “Open FFX.html” to upload the file.'}finally{btn.disabled=false}};
-  $('#fullDownload',root).onclick=function(){var text=src.value;if(!text.trim()){toast('Load or paste FFX.html first','bad');return}var blob=new Blob([text],{type:'text/html;charset=utf-8'});var url=URL.createObjectURL(blob);var link=document.createElement('a');link.href=url;link.download='FFX.html';document.body.appendChild(link);link.click();link.remove();setTimeout(function(){URL.revokeObjectURL(url)},1000);toast('Edited FFX.html downloaded','ok')};
-  $('#fullLinks',root).onclick=function(){var text=src.value;if(!text.trim()){toast('Load FFX.html first','bad');return}var vals=[];var re=/(?:href|src|poster|content)\s*=\s*(["'])(.*?)\1/gi,m;while((m=re.exec(text))!==null){var v=m[2].trim();if(v&&!vals.includes(v))vals.push(v)}assetBox.innerHTML='<h4 style="margin-bottom:8px">Found links & assets ('+vals.length+')</h4>'+vals.map(function(v){return '<div style="padding:7px 0;border-bottom:1px solid var(--bd);word-break:break-all;font-size:12px">'+esc(v)+'</div>'}).join('')};
-  $('#fullPreview',root).onclick=function(){if(!src.value.trim()){toast('Load FFX.html first','bad');return}var w=window.open('about:blank','_blank');if(!w){toast('Allow pop-ups to preview','bad');return}w.document.open();w.document.write(src.value);w.document.close()};
-  $('#fullReset',root).onclick=function(){if(confirm('Clear the editor contents?')){src.value='';status.textContent='Editor cleared';assetBox.innerHTML=''}};
-}
 
 function openMenu(){
   openSheet('Menu',function(b){
@@ -617,5 +590,79 @@ function editFF(){
 })();
 })();
 </script>
+
+<style>
+#visualEditLaunch{position:fixed;right:14px;bottom:14px;z-index:150;background:#7c3aed;color:#fff;border:0;border-radius:16px;padding:13px 16px;font:700 14px Inter,system-ui;box-shadow:0 8px 24px #4c1d9580;display:none}
+#visualEditOverlay{position:fixed;inset:0;z-index:200;background:#eef2ff;display:none;flex-direction:column;font:14px Inter,system-ui;color:#0f172a}
+#veTop{display:flex;align-items:center;gap:8px;padding:10px;background:white;border-bottom:1px solid #cbd5e1;flex-wrap:wrap}
+#veTop strong{margin-right:auto}#veTop button,#vePanel button{border:1px solid #cbd5e1;background:white;border-radius:10px;padding:9px 12px;font-weight:700}
+#veWork{display:flex;min-height:0;flex:1;gap:10px;padding:10px}
+#veFrameWrap{flex:1;min-width:0;background:white;border:1px solid #cbd5e1;border-radius:14px;overflow:hidden}
+#veFrame{width:100%;height:100%;border:0;background:white}
+#vePanel{width:290px;max-width:42vw;overflow:auto;background:white;border:1px solid #cbd5e1;border-radius:14px;padding:14px}
+#vePanel label{display:block;font-size:12px;font-weight:700;color:#475569;margin:12px 0 5px}
+#vePanel input,#vePanel textarea{width:100%;padding:10px;border:1px solid #cbd5e1;border-radius:9px;font:13px Inter,system-ui}
+#vePanel textarea{min-height:75px}#vePanel .vehint{font-size:12px;color:#64748b;line-height:1.5}
+#veSelected{padding:8px;background:#f5f3ff;border-radius:8px;font-weight:700;word-break:break-word}
+@media(max-width:700px){#veWork{flex-direction:column}#veFrameWrap{height:55vh;flex:none}#vePanel{width:100%;max-width:none;flex:1}}
+</style>
+<button id="visualEditLaunch" type="button">✏️ Visual Website Editor</button>
+<div id="visualEditOverlay">
+ <div id="veTop"><strong>Visual Website Editor</strong><span id="veStatus">Upload your FFX.html to begin</span>
+ <button id="veLoadBtn">Load FFX.html</button><input id="veFile" type="file" accept=".html,text/html" hidden>
+ <button id="veDownload">Download edited website</button><button id="veClose">Close</button></div>
+ <div id="veWork"><div id="veFrameWrap"><iframe id="veFrame" title="Website visual editor" sandbox="allow-scripts allow-forms allow-same-origin"></iframe></div>
+ <div id="vePanel"><div class="vehint">Preview-তে কোনো লেখা, ছবি, লোগো, ব্যানার বা বাটনে ক্লিক করে সেটি নির্বাচন করো। তারপর এখানে পরিবর্তন করে Apply চাপো। HTML কোড লিখতে হবে না।</div>
+ <label>Selected element</label><div id="veSelected">Nothing selected</div>
+ <label>Text / Button title</label><textarea id="veText" placeholder="Selected text"></textarea>
+ <label>Image URL</label><input id="veImage" placeholder="https://...">
+ <label>Upload replacement image</label><input id="veImageFile" type="file" accept="image/*">
+ <label>Link URL</label><input id="veLink" placeholder="https://...">
+ <label>Background color</label><input id="veColor" type="color" value="#ffffff">
+ <div style="display:flex;gap:8px;margin-top:14px"><button id="veApply" style="background:#7c3aed;color:white">Apply changes</button><button id="veClear">Clear selection</button></div>
+ <p class="vehint" style="margin-top:12px">Changes are previewed locally. Download the edited HTML and upload it to your hosting to publish. This tool does not alter your existing admin/API settings.</p>
+ </div></div>
+</div>
+<script>
+(function(){
+ const launch=document.getElementById('visualEditLaunch'),ov=document.getElementById('visualEditOverlay'),file=document.getElementById('veFile'),frame=document.getElementById('veFrame');
+ let doc=null,selected=null,originalHtml='',loadedName='FFX.html';
+ function show(){ov.style.display='flex'} function hide(){ov.style.display='none'}
+ function setStatus(t){document.getElementById('veStatus').textContent=t}
+ function enable(){launch.style.display='block'}
+ const observer=new MutationObserver(()=>{if(document.getElementById('app')&&!document.getElementById('app').classList.contains('hidden'))enable()});
+ observer.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['class']});
+ document.getElementById('veLoadBtn').onclick=()=>file.click();
+ file.onchange=()=>{const f=file.files[0];if(!f)return;loadedName=f.name;const r=new FileReader();r.onload=()=>{originalHtml=String(r.result);frame.srcdoc=originalHtml;setStatus('Loaded: '+f.name);};r.readAsText(f);file.value='';};
+ frame.addEventListener('load',()=>{
+  try{doc=frame.contentDocument;if(!doc)return;
+   doc.addEventListener('click',e=>{
+    if(e.target.closest('a'))e.preventDefault();
+    e.preventDefault();e.stopPropagation();
+    selected=e.target;while(selected&&selected!==doc.body&&selected.children.length===1&&selected.textContent.trim()==='')selected=selected.children[0];
+    doc.querySelectorAll('[data-ve-selected]').forEach(el=>{el.style.outline='';el.removeAttribute('data-ve-selected')});
+    selected.setAttribute('data-ve-selected','1');selected.style.outline='3px solid #a855f7';
+    document.getElementById('veSelected').textContent=selected.tagName.toLowerCase()+(selected.id?'#'+selected.id:'')+(selected.className&&typeof selected.className==='string'?'.'+selected.className.trim().split(/\s+/).slice(0,2).join('.'): '');
+    document.getElementById('veText').value=selected.innerText||selected.alt||selected.getAttribute('aria-label')||'';
+    document.getElementById('veImage').value=(selected.matches('img')?selected.src:(selected.querySelector('img')||{}).src)||'';
+    const a=selected.closest('a')||selected.querySelector('a');document.getElementById('veLink').value=a?a.getAttribute('href')||'':'';
+    let bg=getComputedStyle(selected).backgroundColor;try{let m=bg.match(/\d+/g);if(m&&m.length>=3)document.getElementById('veColor').value='#'+m.slice(0,3).map(x=>(+x).toString(16).padStart(2,'0')).join('')}catch(_){}
+   },true);
+  }catch(e){setStatus('Some scripts may restrict preview editing; try selecting visible content.')}
+ });
+ document.getElementById('veApply').onclick=()=>{
+  if(!selected||!doc){alert('প্রথমে preview-তে কোনো element নির্বাচন করো');return}
+  const txt=document.getElementById('veText').value,im=document.getElementById('veImage').value,ln=document.getElementById('veLink').value,col=document.getElementById('veColor').value;
+  if(txt!==''&&(selected.matches('img')?false:true)){if(selected.children.length===0)selected.textContent=txt;else {let textNode=[...selected.childNodes].find(n=>n.nodeType===3&&n.textContent.trim());if(textNode)textNode.textContent=txt;else selected.insertBefore(doc.createTextNode(txt),selected.firstChild)}}
+  if(im){if(selected.matches('img'))selected.src=im;else {let image=selected.querySelector('img');if(image)image.src=im;else selected.style.backgroundImage='url("'+im.replace(/"/g,'%22')+'")'}}
+  if(ln){let a=selected.closest('a')||selected.querySelector('a');if(a)a.href=ln;else if(selected.tagName==='A')selected.href=ln}
+  selected.style.backgroundColor=col;selected.style.outline='3px solid #a855f7';setStatus('Applied locally — download to save');};
+ document.getElementById('veImageFile').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{document.getElementById('veImage').value=String(r.result);setStatus('Image ready — press Apply changes')};r.readAsDataURL(f);};
+ document.getElementById('veClear').onclick=()=>{if(selected){selected.style.outline='';selected.removeAttribute('data-ve-selected')}selected=null;document.getElementById('veSelected').textContent='Nothing selected'};
+ document.getElementById('veDownload').onclick=()=>{if(!doc){alert('আগে FFX.html Load করো');return}doc.querySelectorAll('[data-ve-selected]').forEach(el=>{el.style.outline='';el.removeAttribute('data-ve-selected')});const out='<!DOCTYPE html>\n'+doc.documentElement.outerHTML;const blob=new Blob([out],{type:'text/html;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=loadedName||'FFX.html';a.click();URL.revokeObjectURL(a.href);setStatus('Downloaded edited HTML')};
+ document.getElementById('veClose').onclick=hide;launch.onclick=show;
+})();
+</script>
+
 </body>
 </html>
