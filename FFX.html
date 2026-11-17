@@ -3053,5 +3053,273 @@ setInterval(fetchFreshAccountConfig, 15000);
   sync();
 })();
 </script>
+</script>
+  <!-- ============================================================
+  LOGIN / REGISTER ADD-ON
+  কিভাবে বসাবেন: আপনার মূল HTML ফাইলের সবচেয়ে শেষে, </body> ট্যাগের ঠিক আগে
+  এই পুরো ফাইলের লেখাটা পেস্ট করুন। মূল কোডের কিছুই বদলাতে হবে না।
+============================================================ -->
+<style>
+/* ===== AUTH MODAL ===== */
+.am{position:fixed;inset:0;z-index:110;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(10,22,55,.55);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);opacity:0;visibility:hidden;transition:opacity .3s,visibility 0s .3s}
+.am.show{opacity:1;visibility:visible;transition:opacity .3s,visibility 0s}
+.am-box{position:relative;width:min(100%,400px);max-height:calc(100vh - 36px);overflow-y:auto;background:#fff;border-radius:26px;padding:22px 18px 20px;box-shadow:0 30px 80px -10px rgba(0,0,0,.55);transform:translateY(24px) scale(.95);transition:transform .4s cubic-bezier(.2,.9,.3,1.15)}
+.am.show .am-box{transform:none}
+.am-x{position:absolute;top:12px;right:12px;width:34px;height:34px;border:0;border-radius:50%;background:#eff5ff;color:var(--v);display:grid;place-items:center;font-size:17px;cursor:pointer}
+.am-x svg{stroke-width:2.4}
+.am-ic{width:56px;height:56px;margin:2px auto 0;border-radius:18px;background:var(--g);color:#fff;display:grid;place-items:center;font-size:28px;box-shadow:0 10px 22px -10px rgba(37,99,235,.85)}
+.am-box h2{margin-top:12px;text-align:center;font-size:20px;font-weight:800;letter-spacing:-.4px}
+.am-box>p.sub{margin-top:4px;text-align:center;font-size:13px;color:var(--mu)}
+.am-tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:16px;padding:4px;border-radius:14px;background:#eef3ff}
+.am-tab{height:38px;border:0;border-radius:11px;background:transparent;color:var(--mu);font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;transition:.2s}
+.am-tab.on{background:#fff;color:var(--v);box-shadow:0 4px 12px -6px rgba(37,99,235,.5)}
+.am-form{display:none;margin-top:14px}
+.am-form.on{display:block}
+.am-form .lbl{margin:10px 0 6px}
+.am-msg{display:none;margin-top:12px;padding:10px 12px;border-radius:10px;font-size:13px;font-weight:600;background:#fef3f2;color:#b42318;border:1px solid #fecdca}
+.am-msg.show{display:block}
+.am-sw{margin-top:14px;text-align:center;font-size:13px;color:var(--mu)}
+.am-sw a{color:var(--v);font-weight:700;cursor:pointer}
+</style>
+
+<div class="am" id="authModal" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="am-box">
+    <button class="am-x" type="button" id="amClose" aria-label="Close"><svg class="i"><use href="#x"/></svg></button>
+    <div class="am-ic"><svg class="i"><use href="#user"/></svg></div>
+    <h2 id="amTitle">লগইন করুন</h2>
+    <p class="sub">অর্ডার করতে লগইন বা রেজিস্টার করা প্রয়োজন</p>
+
+    <div class="am-tabs">
+      <button type="button" class="am-tab on" data-tab="login">Login</button>
+      <button type="button" class="am-tab" data-tab="register">Register</button>
+    </div>
+
+    <form class="am-form on" id="amLogin" autocomplete="on" novalidate>
+      <label class="lbl" for="amLEmail">ইমেইল</label>
+      <input class="inp" id="amLEmail" type="email" autocomplete="email" placeholder="আপনার ইমেইল দিন">
+      <label class="lbl" for="amLPass">পাসওয়ার্ড</label>
+      <input class="inp" id="amLPass" type="password" autocomplete="current-password" placeholder="পাসওয়ার্ড দিন">
+      <button class="btn" type="submit">Login</button>
+      <p class="am-sw">অ্যাকাউন্ট নেই? <a data-tab="register">Register করুন</a></p>
+    </form>
+
+    <form class="am-form" id="amReg" autocomplete="on" novalidate>
+      <label class="lbl" for="amRName">নাম</label>
+      <input class="inp" id="amRName" type="text" autocomplete="name" placeholder="আপনার নাম দিন">
+      <label class="lbl" for="amREmail">ইমেইল</label>
+      <input class="inp" id="amREmail" type="email" autocomplete="email" placeholder="আপনার ইমেইল দিন">
+      <label class="lbl" for="amRPass">পাসওয়ার্ড</label>
+      <input class="inp" id="amRPass" type="password" autocomplete="new-password" placeholder="কমপক্ষে ৬ অক্ষর">
+      <label class="lbl" for="amRPass2">পাসওয়ার্ড আবার দিন</label>
+      <input class="inp" id="amRPass2" type="password" autocomplete="new-password" placeholder="পাসওয়ার্ড আবার দিন">
+      <button class="btn" type="submit">Register</button>
+      <p class="am-sw">আগে থেকেই অ্যাকাউন্ট আছে? <a data-tab="login">Login করুন</a></p>
+    </form>
+
+    <div class="am-msg" id="amMsg"></div>
+  </div>
+</div>
+
+<script>
+// ==========================================
+// 16. LOGIN / REGISTER SYSTEM (add-on)
+// নোট: এটা ব্রাউজারের localStorage-এ কাজ করে (ডেমো/ফ্রন্টএন্ড লেভেল)।
+// আসল সিকিউরিটির জন্য পরে ব্যাকএন্ড/ডাটাবেস যুক্ত করতে হবে।
+// ==========================================
+(function(){
+  var KU='ff_users_v1', KS='ff_session_v1';
+  function $(id){return document.getElementById(id)}
+  function load(k,d){try{var v=JSON.parse(localStorage.getItem(k));return v==null?d:v}catch(e){return d}}
+  function save(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+  function users(){return load(KU,{})}
+  function cur(){var s=load(KS,null); if(!s) return null; return users()[s]||null}
+  function saveUser(u){var all=users(); all[u.email]=u; save(KU,all)}
+  function toast(m){var t=$('toast'); if(!t) return; t.textContent=m; t.classList.add('show'); clearTimeout(toast.t); toast.t=setTimeout(function(){t.classList.remove('show')},2600)}
+  function hash(s){
+    if(window.crypto&&crypto.subtle&&window.TextEncoder){
+      return crypto.subtle.digest('SHA-256',new TextEncoder().encode(s)).then(function(b){
+        return Array.prototype.map.call(new Uint8Array(b),function(x){return ('0'+x.toString(16)).slice(-2)}).join('');
+      });
+    }
+    return Promise.resolve(btoa(unescape(encodeURIComponent(s))));
+  }
+  function pin(){var s='';for(var i=0;i<7;i++) s+=Math.floor(Math.random()*10); return s}
+  function fmtDate(d){
+    function p(n){return (n<10?'0':'')+n}
+    var h=d.getHours(), ap=h>=12?'PM':'AM'; h=h%12||12;
+    return p(d.getDate())+'-'+p(d.getMonth()+1)+'-'+d.getFullYear()+' '+p(h)+':'+p(d.getMinutes())+':'+p(d.getSeconds())+' '+ap;
+  }
+
+  // ---------- মডাল ----------
+  var modal=$('authModal'), msg=$('amMsg');
+  function setTab(t){
+    document.querySelectorAll('#authModal .am-tab').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-tab')===t)});
+    $('amLogin').classList.toggle('on',t==='login');
+    $('amReg').classList.toggle('on',t==='register');
+    $('amTitle').textContent=t==='login'?'লগইন করুন':'রেজিস্টার করুন';
+    msg.className='am-msg';
+  }
+  function openAuth(t){
+    var panel=$('accPanel'); if(panel){panel.classList.remove('show');panel.setAttribute('aria-hidden','true')}
+    var fab=$('fab'); if(fab) fab.classList.remove('open');
+    setTab(t||'login');
+    modal.classList.add('show'); modal.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden';
+  }
+  function closeAuth(){modal.classList.remove('show'); modal.setAttribute('aria-hidden','true'); document.body.style.overflow=''}
+  function err(t){msg.textContent=t; msg.className='am-msg show'}
+  window.openAuth=openAuth;
+
+  $('amClose').onclick=closeAuth;
+  modal.addEventListener('click',function(e){if(e.target===modal) closeAuth()});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape') closeAuth()});
+  modal.querySelectorAll('[data-tab]').forEach(function(b){b.addEventListener('click',function(e){e.preventDefault(); setTab(b.getAttribute('data-tab'))})});
+
+  // ---------- Register ----------
+  $('amReg').addEventListener('submit',function(e){
+    e.preventDefault();
+    var name=$('amRName').value.trim(), email=$('amREmail').value.trim().toLowerCase(), p1=$('amRPass').value, p2=$('amRPass2').value;
+    if(name.length<2) return err('সঠিক নাম দিন');
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return err('সঠিক ইমেইল দিন');
+    if(p1.length<6) return err('পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের দিন');
+    if(p1!==p2) return err('দুটি পাসওয়ার্ড মিলছে না');
+    if(users()[email]) return err('এই ইমেইল দিয়ে আগেই অ্যাকাউন্ট খোলা আছে');
+    hash(email+':'+p1).then(function(h){
+      saveUser({name:name,email:email,h:h,pin:pin(),balance:0,orders:[],codes:[]});
+      save(KS,email); closeAuth(); applyAll();
+      $('amReg').reset(); toast('রেজিস্ট্রেশন সফল! স্বাগতম, '+name);
+    });
+  });
+
+  // ---------- Login ----------
+  $('amLogin').addEventListener('submit',function(e){
+    e.preventDefault();
+    var email=$('amLEmail').value.trim().toLowerCase(), p=$('amLPass').value;
+    if(!email||!p) return err('ইমেইল ও পাসওয়ার্ড দিন');
+    var u=users()[email]; if(!u) return err('এই ইমেইলে কোনো অ্যাকাউন্ট নেই');
+    hash(email+':'+p).then(function(h){
+      if(h!==u.h) return err('পাসওয়ার্ড ভুল হয়েছে');
+      save(KS,email); closeAuth(); applyAll();
+      $('amLogin').reset(); toast('লগইন সফল! স্বাগতম, '+u.name);
+    });
+  });
+
+  // ---------- Logout ----------
+  function logout(){
+    try{localStorage.removeItem(KS)}catch(e){}
+    var panel=$('accPanel'); if(panel){panel.classList.remove('show');panel.setAttribute('aria-hidden','true')}
+    document.body.style.overflow='';
+    applyAll(); location.hash=''; toast('লগআউট হয়েছে');
+  }
+
+  // ---------- প্রোডাক্ট পেজ সিঙ্ক ----------
+  var PAGES=[
+    {buy:'buyBtn',warn:'loginWarn',row:null,bal:null,lbl:'অর্ডার করুন'},
+    {buy:'uidBuy',warn:'uidLoginWarn',row:'uidBalRow',bal:'uidBal',lbl:'Buy Now'},
+    {buy:'wmBuy',warn:'wmLoginWarn',row:'wmBalRow',bal:'wmBal',lbl:'Buy Now'},
+    {buy:'wlBuy',warn:'wlLoginWarn',row:'wlBalRow',bal:'wlBal',lbl:'Buy Now'},
+    {buy:'luBuy',warn:'luLoginWarn',row:'luBalRow',bal:'luBal',lbl:'Buy Now'},
+    {buy:'inBuy',warn:'inLoginWarn',row:'inBalRow',bal:'inBal',lbl:'Buy Now'}
+  ];
+  function fixLogged(){
+    var u=cur(); if(!u) return;
+    PAGES.forEach(function(p){
+      var b=$(p.buy), w=$(p.warn), r=p.row&&$(p.row), be=p.bal&&$(p.bal);
+      if(w&&w.style.display!=='none') w.style.display='none';
+      if(r&&r.style.display!=='flex') r.style.display='flex';
+      if(be&&be.textContent!==u.balance.toFixed(2)) be.textContent=u.balance.toFixed(2);
+      if(b&&b.textContent!==p.lbl) b.textContent=p.lbl;
+    });
+  }
+  function resetGuest(){
+    PAGES.forEach(function(p){
+      var b=$(p.buy), w=$(p.warn), r=p.row&&$(p.row);
+      if(w) w.style.display='flex';
+      if(r) r.style.display='none';
+      if(b) b.textContent='Login';
+    });
+  }
+  if(window.MutationObserver){
+    var mo=new MutationObserver(fixLogged);
+    PAGES.forEach(function(p){
+      var b=$(p.buy), w=$(p.warn);
+      if(b) mo.observe(b,{childList:true,characterData:true,subtree:true});
+      if(w) mo.observe(w,{attributes:true,attributeFilter:['style']});
+    });
+  }
+
+  // ---------- পুরো UI আপডেট ----------
+  function applyAll(){
+    var u=cur();
+    if(typeof window.setProfile==='function'){
+      window.setProfile(u?{loggedIn:true,name:u.name,email:u.email,supportPin:u.pin,verified:true,balance:u.balance,orders:u.orders.length,codes:u.codes.length}:{});
+    }
+    var w=document.querySelector('.wallet'); if(w&&w.lastChild) w.lastChild.textContent=(u?u.balance:0)+'৳';
+    if($('accName')) $('accName').textContent=u?'Hi, '+u.name:'Hi, Guest';
+    if($('accMail')) $('accMail').textContent=u?u.email:'লগইন করে অর্ডার করুন';
+    var lo=$('accLo');
+    if(lo){
+      var sp=lo.querySelector('span'); if(sp) sp.textContent=u?'Logout':'Login';
+      var us=lo.querySelector('use'); if(us) us.setAttribute('href',u?'#a-power':'#a-in');
+    }
+    if(typeof window.renderOrders==='function') window.renderOrders(u?u.orders:[]);
+    if(typeof window.renderCodes==='function') window.renderCodes(u?u.codes:[]);
+    if(typeof window.renderTransactions==='function') window.renderTransactions([]);
+    if(u) fixLogged(); else resetGuest();
+  }
+
+  // ---------- গার্ড: লগইন ছাড়া ক্লিক আটকানো ----------
+  var NAV_LOCK=[1,2,3,4]; // My Orders, Add Money, My Codes, My Account (Home = 0 খোলা)
+  window.addEventListener('click',function(e){
+    var t=e.target.closest?e.target.closest('a,button,[role="button"]'):null; if(!t) return;
+    var u=cur();
+
+    // প্রোডাক্ট পেজের Login / Buy বাটন
+    for(var i=0;i<PAGES.length;i++){
+      if(t.id===PAGES[i].buy){
+        e.preventDefault(); e.stopImmediatePropagation();
+        if(!u) return openAuth('login');
+        return placeOrder(t,u);
+      }
+    }
+    // অ্যাকাউন্ট প্যানেলের Login/Logout বাটন
+    if(t.id==='accLo'){
+      e.preventDefault(); e.stopImmediatePropagation();
+      return u?logout():openAuth('login');
+    }
+    if(u) return;
+
+    // গেস্ট: প্রোফাইল ও প্রাইভেট জায়গা
+    var navs=[].slice.call(document.querySelectorAll('nav.nav a')), ni=navs.indexOf(t);
+    var locked = t.id==='avBtn' || (ni>-1 && NAV_LOCK.indexOf(ni)>-1) ||
+      t.matches('.acc-it[data-go], #acAdd, #cdRedeem, #cdOrder.never, .ac-mi[data-to]');
+    if(locked){ e.preventDefault(); e.stopImmediatePropagation(); openAuth('login'); }
+  },true);
+
+  // ---------- অর্ডার (ফ্রন্টএন্ড ডেমো) ----------
+  function placeOrder(btn,u){
+    var view=btn.closest('main'); if(!view) return;
+    var pk=view.querySelector('.pk.on'), inp=view.querySelector('input.inp'), po=view.querySelector('.po.on');
+    if(!pk) return toast('আগে একটি রিচার্জ প্যাকেজ সিলেক্ট করুন');
+    var uid=(inp&&inp.value||'').trim();
+    if(uid.length<6){toast('সঠিক প্লেয়ার আইডি দিন'); if(inp) inp.focus(); return}
+    var price=+pk.dataset.price, pay=po?po.dataset.pay:'Wallet Pay';
+    if(pay!=='Wallet Pay') return toast('Instant Pay শীঘ্রই আসছে');
+    if(u.balance<price) return toast('ওয়ালেটে যথেষ্ট ব্যালেন্স নেই। Add Money করুন');
+    u.balance-=price;
+    var now=fmtDate(new Date());
+    u.orders.unshift({id:String(Date.now()).slice(-7),status:'Pending',date:now,updated:now,package:pk.dataset.name,price:price,playerId:uid});
+    saveUser(u); applyAll(); toast('অর্ডার সাবমিট হয়েছে ✓');
+  }
+
+  // ---------- প্রাইভেট পেজে সরাসরি ঢোকা আটকানো ----------
+  var PRIV=['#my-orders','#my-codes','#account','#my-transaction'];
+  function guardHash(){
+    if(!cur() && PRIV.indexOf(location.hash)>-1){ location.hash=''; openAuth('login'); }
+  }
+  window.addEventListener('hashchange',guardHash);
+
+  applyAll(); guardHash();
+})();
+</script>
 </body>
 </html>
