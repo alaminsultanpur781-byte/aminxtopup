@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Login & Register - AminX Topup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f5f8ff;--card:#fff;--bd:#e1e8f5;--v:#2563eb;--tx:#0f172a;--mu:#64708a;--err:#dc2626;--g:linear-gradient(135deg,#3b82f6,#1d4ed8)}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;display:grid;place-items:center;padding:20px}
+.card{width:100%;max-width:390px;background:var(--card);border:1px solid var(--bd);border-radius:22px;padding:28px 22px;box-shadow:0 20px 50px -25px rgba(37,99,235,.45);text-align:center}
+.ic{width:60px;height:60px;border-radius:18px;background:var(--g);color:#fff;display:grid;place-items:center;margin:0 auto 14px;box-shadow:0 12px 24px -12px rgba(37,99,235,.8)}
+h1{font-size:21px;font-weight:800}
+p.sub{color:var(--mu);font-size:13.5px;margin:6px 0 20px}
+.inp{width:100%;height:48px;border:1.5px solid var(--bd);border-radius:14px;padding:0 14px;background:#fff;color:var(--tx);outline:none;transition:.15s;margin-bottom:12px;font-family:inherit;font-size:14px}
+.inp:focus{border-color:var(--v);box-shadow:0 0 0 3px rgba(37,99,235,.15)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;height:46px;padding:0 18px;border-radius:14px;border:0;font-weight:700;cursor:pointer;transition:.15s;background:var(--g);color:#fff;box-shadow:0 10px 20px -12px rgba(37,99,235,.9);width:100%;font-size:14.5px}
+.btn:active{transform:scale(.98)}
+.btn:disabled{opacity:.6;cursor:not-allowed}
+.g-btn{background:#fff;color:var(--tx);border:1.5px solid var(--bd);box-shadow:0 4px 12px rgba(0,0,0,.04);margin-top:4px}
+.div{display:flex;align-items:center;gap:10px;margin:16px 0;color:var(--mu);font-size:12px;font-weight:600}
+.div::before,.div::after{content:"";flex:1;height:1px;background:var(--bd)}
+.err{color:var(--err);font-size:13px;font-weight:600;margin-bottom:10px;min-height:18px}
+.toggle{margin-top:18px;font-size:13.5px;color:var(--mu)}
+.toggle span{color:var(--v);font-weight:700;cursor:pointer}
+.hidden{display:none}
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="ic">
+    <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+  </div>
+  
+  <h1 id="formTitle">Welcome Back</h1>
+  <p class="sub" id="formSub">Login to manage your orders & wallet</p>
+
+  <form id="authForm">
+    <input class="inp hidden" type="text" id="userName" placeholder="Full Name">
+    <input class="inp" type="email" id="userEmail" placeholder="Email Address" required>
+    <input class="inp" type="password" id="userPassword" placeholder="Password (min 6 chars)" required>
+    
+    <div class="err" id="errMsg"></div>
+    <button class="btn" type="submit" id="submitBtn">Log In</button>
+  </form>
+
+  <div class="div">OR</div>
+
+  <button type="button" class="btn g-btn" id="googleBtn">
+    <svg width="18" height="18" viewBox="0 0 24 24">
+      <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"/>
+      <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.11-6.72-4.96H1.29v3.14C3.26 21.3 7.31 24 12 24z"/>
+      <path fill="#FBBC05" d="M5.28 14.24c-.24-.72-.38-1.49-.38-2.24s.14-1.52.38-2.24V6.62H1.29C.47 8.24 0 10.06 0 12s.47 3.76 1.29 5.38l3.99-3.14z"/>
+      <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.26 2.7 1.29 6.62l3.99 3.14c.95-2.85 3.6-4.96 6.72-4.96z"/>
+    </svg>
+    Continue with Google
+  </button>
+
+  <div class="toggle" id="toggleText">
+    Don't have an account? <span id="switchMode">Register Now</span>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { 
+  getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, 
+  updateProfile, GoogleAuthProvider, signInWithPopup 
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+// ⚠️ এখানে আপনার Firebase প্রজেক্টের আসল Config বসান
+const firebaseConfig = {
+  apiKey: "AIzaSyBos2wjezADgbGVTcZehMf0-QEOfS7DKxo",
+  authDomain: "alx-topup.firebaseapp.com",
+  databaseURL: "https://alx-topup-default-rtdb.firebaseio.com",
+  projectId: "alx-topup",
+  storageBucket: "alx-topup.firebasestorage.app",
+  messagingSenderId: "1015244114830",
+  appId: "1:1015244114830:web:edcc05a3c25d83999b72df"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const googleProvider = new GoogleAuthProvider();
+
+let isRegister = false;
+const formTitle = document.getElementById('formTitle');
+const formSub = document.getElementById('formSub');
+const userName = document.getElementById('userName');
+const submitBtn = document.getElementById('submitBtn');
+const errMsg = document.getElementById('errMsg');
+const toggleText = document.getElementById('toggleText');
+
+function setupToggle() {
+  document.getElementById('switchMode').onclick = () => {
+    isRegister = !isRegister;
+    errMsg.textContent = '';
+    if (isRegister) {
+      formTitle.textContent = 'Create Account';
+      formSub.textContent = 'Sign up to get started';
+      userName.classList.remove('hidden');
+      userName.required = true;
+      submitBtn.textContent = 'Register';
+      toggleText.innerHTML = 'Already have an account? <span id="switchMode">Log In</span>';
+    } else {
+      formTitle.textContent = 'Welcome Back';
+      formSub.textContent = 'Login to manage your orders & wallet';
+      userName.classList.add('hidden');
+      userName.required = false;
+      submitBtn.textContent = 'Log In';
+      toggleText.innerHTML = 'Don\'t have an account? <span id="switchMode">Register Now</span>';
+    }
+    setupToggle();
+  };
+}
+setupToggle();
+
+document.getElementById('authForm').onsubmit = async (e) => {
+  e.preventDefault();
+  errMsg.textContent = '';
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Please wait...';
+
+  const email = document.getElementById('userEmail').value.trim();
+  const password = document.getElementById('userPassword').value;
+  const name = userName.value.trim();
+
+  try {
+    if (isRegister) {
+      const cred = await createUserWithEmailAndPassword(auth, email, password);
+      if (name) await updateProfile(cred.user, { displayName: name });
+    } else {
+      await signInWithEmailAndPassword(auth, email, password);
+    }
+    window.location.href = '/';
+  } catch (err) {
+    errMsg.textContent = err.message.replace('Firebase: ', '');
+    submitBtn.disabled = false;
+    submitBtn.textContent = isRegister ? 'Register' : 'Log In';
+  }
+};
+
+document.getElementById('googleBtn').onclick = async () => {
+  errMsg.textContent = '';
+  try {
+    await signInWithPopup(auth, googleProvider);
+    window.location.href = '/';
+  } catch (err) {
+    errMsg.textContent = err.message.replace('Firebase: ', '');
+  }
+};
+</script>
+
+</body>
+</html>
