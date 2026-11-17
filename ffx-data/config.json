@@ -135,20 +135,6 @@
           "price": 1235
         }
       ]
-    },
-    "ff": {
-      "packages": [
-        {
-          "label": "100",
-          "name": "100",
-          "price": 50
-        },
-        {
-          "label": "Jjj",
-          "name": "Uu",
-          "price": 2255
-        }
-      ]
     }
   },
   "texts": {
