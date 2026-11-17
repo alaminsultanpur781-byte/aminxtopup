@@ -71,8 +71,17 @@ input:checked+.slider{background:#22c55e}input:checked+.slider:before{transform:
 <button onclick="nav('settings')" id="btn-settings" class="flex flex-col items-center text-gray-400 p-2 min-w-[60px]"><i class="fas fa-cog text-xl mb-1"></i><span class="text-[10px] font-bold">Setup</span></button>
 </div></nav></div>
 <script>
-const firebaseConfig={apiKey:"AIzaSyBos2wjezADgbGVTcZehMf0-QEOfS7DKxo",authDomain:"alx-topup.firebaseapp.com",databaseURL:"https://alx-topup-default-rtdb.firebaseio.com",projectId:"alx-topup",storageBucket:"alx-topup.firebasestorage.app",messagingSenderId:"1015244114830",appId:"1:1015244114830:web:edcc05a3c25d83999b72df"};
-if(!firebase.apps.length)firebase.initializeApp(firebaseConfig);
+  
+const firebaseConfig = {
+  apiKey: "AIzaSyBos2wjezADgbGVTcZehMf0-QEOfS7DKxo",
+  authDomain: "alx-topup.firebaseapp.com",
+  databaseURL: "https://alx-topup-default-rtdb.firebaseio.com",
+  projectId: "alx-topup",
+  storageBucket: "alx-topup.firebasestorage.app",
+  messagingSenderId: "1015244114830",
+  appId: "1:1015244114830:web:edcc05a3c25d83999b72df"
+};
+  if(!firebase.apps.length)firebase.initializeApp(firebaseConfig);
 const db=firebase.firestore(),auth=firebase.auth();
 const $=id=>document.getElementById(id);
 const gatewayKeys=['bkashMerchant','bkashPayment','nagadPersonal','rocketPersonal','upayPersonal','banglaQr'];
