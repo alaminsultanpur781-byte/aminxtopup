@@ -24,8 +24,9 @@
         .notice-scroll { animation: scroll-left 15s linear infinite; display: inline-block; white-space: nowrap; }
         @keyframes scroll-left { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
         
-        .method-card { transition: all 0.2s; border: 2px solid transparent; }
-        .method-card:active { transform: scale(0.95); }
+        .gateway-card { transition: all 0.2s ease; border: 2px solid #e2e8f0; background: white; }
+        .gateway-card:active { transform: scale(0.97); }
+        .gateway-card.selected { border-color: #03a9f4; background-color: #f0f9ff; }
         
         @keyframes fadeInUp { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
         .animate-fade-in { animation: fadeInUp 0.4s ease-out forwards; }
@@ -377,62 +378,64 @@
             </div>
         </section>
 
-        <!-- ADD MONEY SECTION -->
-        <section id="addmoney-sec" class="hidden animate-fade-in">
-            <h2 class="font-bold text-xl text-gray-800 mb-4 px-2">Add Money</h2>
+        <!-- ADD MONEY SECTION (REDESIGNED GATEWAY STYLE) -->
+        <section id="addmoney-sec" class="hidden animate-fade-in pb-20">
+            <div class="flex items-center justify-between mb-4 px-2">
+                <h2 class="font-bold text-xl text-gray-800">Add Money</h2>
+                <button onclick="toggleAddMoneyView('history')" id="btn-history-toggle" class="text-xs font-bold text-sky-600 bg-sky-50 px-3 py-1.5 rounded-lg border border-sky-200"><i class="fas fa-history mr-1"></i> Deposit History</button>
+            </div>
             
             <!-- Manual Payment & Deposit History View -->
             <div id="manual-payment-view">
-                <div class="flex bg-gray-100 p-1 rounded-lg mb-6">
-                    <button onclick="toggleAddMoneyView('form')" id="btn-addmoney-view" class="w-1/2 py-2 rounded-md font-bold text-sm bg-white shadow text-sky-600 transition">Add Money</button>
-                    <button onclick="toggleAddMoneyView('history')" id="btn-history-view" class="w-1/2 py-2 rounded-md font-bold text-sm text-gray-500 transition">Deposit History</button>
+                <!-- Gateway Selector Tabs -->
+                <div class="flex bg-white p-1 rounded-xl shadow-sm border border-gray-200 mb-5">
+                    <button onclick="switchGatewayTab('all')" id="tab-all-gateway" class="flex-1 py-2 rounded-lg font-bold text-xs bg-sky-500 text-white transition shadow-sm">সব পদ্ধতি</button>
+                    <button onclick="switchGatewayTab('mfs')" id="tab-mfs-gateway" class="flex-1 py-2 rounded-lg font-bold text-xs text-gray-600 transition">মোবাইল ব্যাংকিং</button>
                 </div>
 
                 <div id="add-money-content">
-                    <div id="payment-methods-grid" class="grid grid-cols-3 gap-3 mb-6">
-                        <div onclick="showPaymentForm('bKash', defaultBkashLogo)" 
-                            class="bg-white p-3 rounded-xl shadow-sm flex flex-col items-center justify-center cursor-pointer method-card h-28">
-                            <img id="manual-bkash-logo" src="https://i.ibb.co.com/9kCCTNsx/1656227518bkash-logo-png.png" class="w-12 h-12 object-contain mb-2">
-                            <span class="text-xs font-bold text-gray-600">bKash</span>
-                        </div>
-                        <div onclick="showPaymentForm('Nagad', defaultNagadLogo)" 
-                            class="bg-white p-3 rounded-xl shadow-sm flex flex-col items-center justify-center cursor-pointer method-card h-28">
-                            <img id="manual-nagad-logo" src="https://i.ibb.co.com/VcqJTvpn/Nagad-Logo-horizontally-og.png" class="w-16 h-12 object-contain mb-2">
-                            <span class="text-xs font-bold text-gray-600">Nagad</span>
-                        </div>
-                        <div onclick="showPaymentForm('Rocket', defaultRocketLogo)" 
-                            class="bg-white p-3 rounded-xl shadow-sm flex flex-col items-center justify-center cursor-pointer method-card h-28">
-                            <img id="manual-rocket-logo" src="https://i.ibb.co.com/wFZkNM48/rocket-color-logo-mobile-banking-icon-free-png.png" class="w-10 h-12 object-contain mb-2">
-                            <span class="text-xs font-bold text-gray-600">Rocket</span>
-                        </div>
+                    <!-- Dynamic Payment Gateways Grid -->
+                    <div id="payment-gateways-grid" class="grid grid-cols-2 gap-3 mb-6">
+                        <!-- Dynamic generated gateway cards will load here -->
                     </div>
 
+                    <!-- Selected Gateway Form (Hidden by default until a gateway is clicked) -->
                     <div id="payment-form-container" class="hidden bg-white p-5 rounded-2xl shadow-lg border border-gray-100">
                         <div class="flex justify-between items-center mb-4">
                             <div class="flex items-center gap-2">
                                 <img id="form-logo" src="" class="w-8 h-8 object-contain">
                                 <h3 id="form-method-name" class="font-bold text-lg text-gray-800">Method</h3>
                             </div>
-                            <button onclick="resetAddMoney()" class="text-gray-400 hover:text-red-500"><i class="fas fa-times"></i></button>
+                            <button onclick="resetAddMoney()" class="text-gray-400 hover:text-red-500"><i class="fas fa-times text-lg"></i></button>
                         </div>
                         
-                        <div class="bg-gray-50 p-3 rounded-lg border border-gray-200 mb-4 flex justify-between items-center">
+                        <div class="bg-sky-50 p-3 rounded-xl border border-sky-100 mb-4 flex justify-between items-center">
                             <div>
-                                <p class="text-[10px] text-gray-500">Send Money (Personal)</p>
-                                <p id="admin-number" class="font-mono font-bold text-lg tracking-wider text-gray-700">Loading...</p>
+                                <p class="text-[10px] text-sky-600 font-bold uppercase" id="form-account-type">Send Money (Personal)</p>
+                                <p id="admin-number" class="font-mono font-bold text-base tracking-wider text-gray-800">Loading...</p>
                             </div>
-                            <button onclick="copyNumber()" class="bg-white p-2 rounded shadow-sm text-sky-600"><i class="far fa-copy"></i></button>
+                            <button onclick="copyNumber()" class="bg-white p-2 rounded-lg shadow-sm text-sky-600 hover:bg-sky-100 transition"><i class="far fa-copy"></i></button>
                         </div>
 
                         <div class="space-y-4">
-                            <input type="number" id="dep-amount" placeholder="Amount" class="w-full bg-gray-50 border border-gray-200 p-3 rounded-lg font-bold focus:outline-none focus:border-sky-500">
-                            <input type="text" id="dep-trx" placeholder="Transaction ID" class="w-full bg-gray-50 border border-gray-200 p-3 rounded-lg font-bold uppercase focus:outline-none focus:border-sky-500">
-                            <button onclick="submitDeposit()" class="w-full bg-sky-600 text-white py-3 rounded-lg font-bold shadow-lg hover:bg-sky-700 transition">Verify & Add Money</button>
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-600 mb-1">টাকার পরিমাণ (Amount)</label>
+                                <input type="number" id="dep-amount" placeholder="যেমন: ১০০ টাকা" class="w-full bg-gray-50 border border-gray-200 p-3 rounded-xl font-bold focus:outline-none focus:border-sky-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-600 mb-1">ট্রানজেকশন আইডি (TrxID)</label>
+                                <input type="text" id="dep-trx" placeholder="যেমন: 9N7A..." class="w-full bg-gray-50 border border-gray-200 p-3 rounded-xl font-bold uppercase focus:outline-none focus:border-sky-500">
+                            </div>
+                            <button onclick="submitDeposit()" class="w-full bg-sky-600 text-white py-3 rounded-xl font-bold shadow-lg hover:bg-sky-700 transition">পেমেন্ট নিশ্চিত করুন</button>
                         </div>
                     </div>
                 </div>
                 
                 <div id="deposit-history-content" class="hidden">
+                    <div class="flex items-center justify-between mb-3 px-1">
+                        <h3 class="font-bold text-sm text-gray-700">আপনার ডিপোজিট হিস্ট্রি</h3>
+                        <button onclick="toggleAddMoneyView('form')" class="text-xs font-bold text-gray-500 bg-gray-200 px-3 py-1 rounded-lg"><i class="fas fa-arrow-left mr-1"></i> Back</button>
+                    </div>
                     <div id="deposit-history-list" class="space-y-3 px-1"></div>
                 </div>
             </div>
@@ -597,10 +600,8 @@
     let dynamicUidApiUrl = "";
     let dynamicUidApiKey = "";
 
-    // Default Logos
-    const defaultBkashLogo = "https://i.ibb.co.com/9kCCTNsx/1656227518bkash-logo-png.png";
-    const defaultNagadLogo = "https://i.ibb.co.com/VcqJTvpn/Nagad-Logo-horizontally-og.png";
-    const defaultRocketLogo = "https://i.ibb.co.com/wFZkNM48/rocket-color-logo-mobile-banking-icon-free-png.png";
+    // Default Gateways Data (Admin থেকে ডাইনামিক্যালি পরিবর্তন করা যাবে)
+    let paymentGatewaysData = {};
 
     function loadGlobalSettings() {
         db.collection("settings").doc("general").onSnapshot((doc) => {
@@ -609,7 +610,6 @@
                 const logoUrl = data.logoUrl || "https://placehold.co/150x50?text=No+Logo";
                 const siteName = data.siteName || "Nenox Shop";
                 
-                // Fetch UID Check API Settings from Admin
                 dynamicUidApiUrl = data.uidApiUrl || "";
                 dynamicUidApiKey = data.uidApiKey || "";
                 
@@ -642,20 +642,63 @@
             }
         });
 
+        // Load Payment Gateways from Admin Firestore (admin -> payment)
         db.collection("admin").doc("payment").onSnapshot((doc) => {
             if(doc.exists) {
-                const pData = doc.data();
-                const bLogo = pData.bkashLogo || defaultBkashLogo;
-                const nLogo = pData.nagadLogo || defaultNagadLogo;
-                const rLogo = pData.rocketLogo || defaultRocketLogo;
-
-                document.getElementById('manual-bkash-logo').src = bLogo;
-                document.getElementById('manual-nagad-logo').src = nLogo;
-                document.getElementById('manual-rocket-logo').src = rLogo;
+                paymentGatewaysData = doc.data();
+                renderPaymentGateways('all');
+            } else {
+                // Fallback default gateways if admin payment doc doesn't exist yet
+                paymentGatewaysData = {
+                    bkashMerchant: { name: "bKash Merchant", number: "01800000000", logo: "https://i.ibb.co.com/9kCCTNsx/1656227518bkash-logo-png.png", active: true, type: "Merchant" },
+                    bkashPayment: { name: "bKash Payment", number: "01811111111", logo: "https://i.ibb.co.com/9kCCTNsx/1656227518bkash-logo-png.png", active: true, type: "Payment" },
+                    nagadPersonal: { name: "Nagad Personal", number: "01700000000", logo: "https://i.ibb.co.com/VcqJTvpn/Nagad-Logo-horizontally-og.png", active: true, type: "Personal" },
+                    rocketPersonal: { name: "Rocket Personal", number: "01900000000", logo: "https://i.ibb.co.com/wFZkNM48/rocket-color-logo-mobile-banking-icon-free-png.png", active: true, type: "Personal" },
+                    upayPersonal: { name: "Upay Personal", number: "01600000000", logo: "https://i.postimg.cc/mgsH5RLr/file-0000000056208211acc1a85780340a2f.png", active: true, type: "Personal" },
+                    banglaQr: { name: "Bangla QR", number: "Scan QR", logo: "https://i.postimg.cc/zXnLWMnt/file-00000000b718821184267aa1485117a6.png", active: true, type: "QR Code" }
+                };
+                renderPaymentGateways('all');
             }
         });
     }
     loadGlobalSettings();
+
+    // Render Payment Gateways Dynamically based on Admin data
+    function renderPaymentGateways(filter) {
+        const grid = document.getElementById('payment-gateways-grid');
+        grid.innerHTML = "";
+
+        for (const [key, gw] of Object.entries(paymentGatewaysData)) {
+            // Skip non-gateway keys if any
+            if(typeof gw !== 'object' || gw === null) continue;
+            if(gw.active === false) continue;
+
+            if(filter === 'mfs' && gw.type === 'QR Code') continue;
+
+            grid.innerHTML += `
+                <div onclick="selectGateway('${key}', '${gw.name}', '${gw.number || 'N/A'}', '${gw.logo || ''}', '${gw.type || 'Personal'}')" 
+                    class="gateway-card p-3 rounded-2xl flex flex-col items-center justify-center cursor-pointer h-32 shadow-sm">
+                    <img src="${gw.logo || 'https://placehold.co/50'}" class="w-12 h-12 object-contain mb-2">
+                    <span class="text-xs font-bold text-gray-800 text-center">${gw.name}</span>
+                    <span class="text-[10px] text-gray-400 mt-0.5">${gw.type || ''}</span>
+                </div>`;
+        }
+    }
+
+    function switchGatewayTab(tab) {
+        const btnAll = document.getElementById('tab-all-gateway');
+        const btnMfs = document.getElementById('tab-mfs-gateway');
+        
+        if(tab === 'all') {
+            btnAll.className = "flex-1 py-2 rounded-lg font-bold text-xs bg-sky-500 text-white transition shadow-sm";
+            btnMfs.className = "flex-1 py-2 rounded-lg font-bold text-xs text-gray-600 transition";
+            renderPaymentGateways('all');
+        } else {
+            btnMfs.className = "flex-1 py-2 rounded-lg font-bold text-xs bg-sky-500 text-white transition shadow-sm";
+            btnAll.className = "flex-1 py-2 rounded-lg font-bold text-xs text-gray-600 transition";
+            renderPaymentGateways('mfs');
+        }
+    }
 
     // --- 2. AUTH LOGIC ---
     function toggleAuth(view) {
@@ -902,7 +945,6 @@
         document.getElementById('topup-sub-title').innerText = gameName + " ";
         document.getElementById('topup-game-img').src = gameImg;
 
-        // Reset UID button state
         const checkBtn = document.getElementById("uidCheckBtn");
         checkBtn.classList.remove("bg-black", "bg-red-600");
         checkBtn.classList.add("bg-gradient-to-r", "from-blue-400", "to-teal-400");
@@ -980,7 +1022,6 @@
         document.getElementById('req-price-text').innerText = `৳ ${selectedProduct.price}`;
     }
 
-    // Payment method selection handler function
     function selectPaymentOption(method) {
         selectedPaymentMethod = method;
         const walletCard = document.getElementById('pay-wallet-card');
@@ -1381,19 +1422,20 @@
     function toggleAddMoneyView(view) {
         const addMoneyContent = document.getElementById('add-money-content');
         const historyContent = document.getElementById('deposit-history-content');
-        const btnAddMoney = document.getElementById('btn-addmoney-view');
-        const btnHistory = document.getElementById('btn-history-view');
+        const btnToggle = document.getElementById('btn-history-toggle');
 
         if (view === 'form') {
             addMoneyContent.classList.remove('hidden');
             historyContent.classList.add('hidden');
-            btnAddMoney.classList.add('bg-white', 'shadow', 'text-sky-600');
-            btnHistory.classList.remove('bg-white', 'shadow', 'text-sky-600');
+            btnToggle.innerHTML = '<i class="fas fa-history mr-1"></i> Deposit History';
+            btnToggle.setAttribute('onclick', "toggleAddMoneyView('history')");
+            resetAddMoney();
         } else {
             addMoneyContent.classList.add('hidden');
             historyContent.classList.remove('hidden');
-            btnHistory.classList.add('bg-white', 'shadow', 'text-sky-600');
-            btnAddMoney.classList.remove('bg-white', 'shadow', 'text-sky-600');
+            btnToggle.innerHTML = '<i class="fas fa-plus mr-1"></i> Add Money';
+            btnToggle.setAttribute('onclick', "toggleAddMoneyView('form')");
+            loadDepositHistory();
         }
     }
     
@@ -1436,21 +1478,24 @@
             });
     }
 
-    function showPaymentForm(methodName, logoUrl) {
-        document.getElementById('payment-methods-grid').classList.add('hidden');
+    let selectedGatewayKey = "";
+
+    function selectGateway(gatewayKey, gatewayName, gatewayNumber, logoUrl, gatewayType) {
+        selectedGatewayKey = gatewayKey;
+        document.getElementById('payment-gateways-grid').classList.add('hidden');
         document.getElementById('payment-form-container').classList.remove('hidden');
         document.getElementById('form-logo').src = logoUrl;
-        document.getElementById('form-method-name').innerText = methodName;
-        db.collection("admin").doc("payment").get().then(doc => {
-            if(doc.exists) document.getElementById('admin-number').innerText = doc.data()[methodName.toLowerCase()] || "01xxxxxxxxx";
-        });
+        document.getElementById('form-method-name').innerText = gatewayName;
+        document.getElementById('form-account-type').innerText = `Send Money (${gatewayType})`;
+        document.getElementById('admin-number').innerText = gatewayNumber;
     }
 
     function resetAddMoney() {
-        document.getElementById('payment-methods-grid').classList.remove('hidden');
+        document.getElementById('payment-gateways-grid').classList.remove('hidden');
         document.getElementById('payment-form-container').classList.add('hidden');
         document.getElementById('dep-amount').value = "";
         document.getElementById('dep-trx').value = "";
+        selectedGatewayKey = "";
     }
 
     function submitDeposit() {
@@ -1458,21 +1503,27 @@
         const trx = document.getElementById('dep-trx').value;
         if(!amt || !trx) return Swal.fire('Error', 'Fill all fields', 'warning');
         
+        const gatewayName = paymentGatewaysData[selectedGatewayKey] ? paymentGatewaysData[selectedGatewayKey].name : "Manual Payment";
+
         Swal.showLoading();
         db.collection('deposits').add({
-            userId: currentUser.uid, amount: parseInt(amt), trxId: trx, 
-            status: 'pending', date: new Date(), userEmail: currentUser.email
+            userId: currentUser.uid, 
+            amount: parseInt(amt), 
+            trxId: trx, 
+            method: gatewayName,
+            status: 'pending', 
+            date: new Date(), 
+            userEmail: currentUser.email
         }).then(() => {
-            Swal.fire('Submitted', 'Your request has been sent.', 'success');
+            Swal.fire('Submitted', 'Your payment request has been sent successfully.', 'success');
             resetAddMoney();
-            loadDepositHistory(); 
             toggleAddMoneyView('history'); 
         });
     }
 
     function copyNumber() {
         navigator.clipboard.writeText(document.getElementById('admin-number').innerText);
-        Swal.fire({toast:true, title:'Copied', icon:'success', position:'top-end', showConfirmButton:false, timer:1000});
+        Swal.fire({toast:true, title:'Copied to clipboard!', icon:'success', position:'top-end', showConfirmButton:false, timer:1000});
     }
 </script>
 </body>
