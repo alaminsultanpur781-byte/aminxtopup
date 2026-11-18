@@ -93,45 +93,100 @@
             opacity: 1;
             pointer-events: auto;
         }
+
+        /* --- PROFESSIONAL & ANIMATED AUTH STYLES --- */
+        @keyframes bgGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        @keyframes floatLogo {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
+        @keyframes modalPop {
+            0% { opacity: 0; transform: scale(0.9) translateY(20px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .auth-bg-animation {
+            background: linear-gradient(-45deg, #0284c7, #0369a1, #1e1b4b, #0f172a);
+            background-size: 400% 400%;
+            animation: bgGradient 12s ease infinite;
+        }
+        .auth-card-anim {
+            animation: modalPop 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .floating-logo {
+            animation: floatLogo 3s ease-in-out infinite;
+        }
+        .auth-input {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .auth-input:focus {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 20px rgba(3, 169, 244, 0.15);
+        }
     </style>
 </head>
 <body class="select-none bg-slate-50">
 
-<!-- AUTH SECTION -->
-<section id="auth-sec" class="min-h-screen flex flex-col items-center justify-center p-6 bg-white z-50 fixed inset-0 overflow-y-auto">
-    <div class="w-full max-w-sm my-auto">
-        <div class="text-center mb-8">
-            <img id="auth-logo-img" src="https://placehold.co/200x80?text=Loading+Logo..." class="h-16 mx-auto mb-3 object-contain">
-            <p class="text-gray-500 text-sm">Best TopUp Service in BD AminX Topup</p>
+<!-- AUTH SECTION (PROFESSIONAL & ANIMATED) -->
+<section id="auth-sec" class="min-h-screen flex flex-col items-center justify-center p-4 auth-bg-animation z-50 fixed inset-0 overflow-y-auto">
+    <div class="w-full max-w-md my-auto bg-white/95 backdrop-blur-xl p-8 rounded-3xl shadow-[0_25px_60px_-15px_rgba(0,0,0,0.3)] border border-white/20 auth-card-anim">
+        
+        <div class="text-center mb-6">
+            <div class="inline-block p-3 bg-sky-50 rounded-2xl mb-3 shadow-inner floating-logo">
+                <img id="auth-logo-img" src="https://placehold.co/200x80?text=AminX+Topup" class="h-14 mx-auto object-contain">
+            </div>
+            <h2 class="text-2xl font-extrabold text-gray-800 tracking-tight">Welcome Back!</h2>
+            <p class="text-gray-400 text-xs mt-1">Best TopUp Service in Bangladesh</p>
         </div>
 
-        <div class="flex bg-gray-100 p-1 rounded-lg mb-6">
-            <button onclick="toggleAuth('login')" id="btn-login-view" class="w-1/2 py-2 rounded-md font-bold text-sm bg-white shadow text-sky-600 transition">Login</button>
-            <button onclick="toggleAuth('register')" id="btn-reg-view" class="w-1/2 py-2 rounded-md font-bold text-sm text-gray-500 transition">Register</button>
+        <div class="flex bg-gray-100/80 p-1.5 rounded-xl mb-6 shadow-inner">
+            <button onclick="toggleAuth('login')" id="btn-login-view" class="w-1/2 py-2.5 rounded-lg font-bold text-xs bg-white shadow-md text-sky-600 transition-all duration-300">Login</button>
+            <button onclick="toggleAuth('register')" id="btn-reg-view" class="w-1/2 py-2.5 rounded-lg font-bold text-xs text-gray-500 hover:text-gray-700 transition-all duration-300">Register</button>
         </div>
 
-        <div id="login-form">
-            <input type="email" id="login-email" placeholder="Email Address" class="w-full bg-gray-50 border border-gray-300 p-3 rounded-lg focus:outline-none focus:border-sky-500 mb-3">
-            <input type="password" id="login-pass" placeholder="Password" class="w-full bg-gray-50 border border-gray-300 p-3 rounded-lg focus:outline-none focus:border-sky-500 mb-4">
-            <button onclick="handleLogin()" class="w-full bg-sky-600 text-white py-3 rounded-lg font-bold shadow-lg hover:bg-sky-700 transition">LOG IN</button>
+        <div id="login-form" class="space-y-3.5 transition-all duration-300">
+            <div>
+                <label class="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1 ml-1">Email Address</label>
+                <input type="email" id="login-email" placeholder="example@gmail.com" class="auth-input w-full bg-gray-50 border border-gray-200 p-3.5 rounded-xl focus:outline-none focus:border-sky-500 focus:bg-white text-sm text-gray-700 font-medium">
+            </div>
+            <div>
+                <label class="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1 ml-1">Password</label>
+                <input type="password" id="login-pass" placeholder="••••••••" class="auth-input w-full bg-gray-50 border border-gray-200 p-3.5 rounded-xl focus:outline-none focus:border-sky-500 focus:bg-white text-sm text-gray-700 font-medium">
+            </div>
+            <button onclick="handleLogin()" class="w-full mt-2 bg-gradient-to-r from-sky-500 to-blue-600 text-white py-3.5 rounded-xl font-bold shadow-lg shadow-sky-500/25 hover:from-sky-600 hover:to-blue-700 active:scale-[0.98] transition-all duration-300 text-sm tracking-wide">LOG IN</button>
         </div>
 
-        <div id="register-form" class="hidden">
-            <input type="text" id="reg-name" placeholder="Full Name" class="w-full bg-gray-50 border border-gray-300 p-3 rounded-lg focus:outline-none focus:border-sky-500 mb-3">
-            <input type="email" id="reg-email" placeholder="Email Address" class="w-full bg-gray-50 border border-gray-300 p-3 rounded-lg focus:outline-none focus:border-sky-500 mb-3">
-            <input type="number" id="reg-phone" placeholder="Phone Number" class="w-full bg-gray-50 border border-gray-300 p-3 rounded-lg focus:outline-none focus:border-sky-500 mb-3">
-            <input type="password" id="reg-pass" placeholder="Password (6+ chars)" class="w-full bg-gray-50 border border-gray-300 p-3 rounded-lg focus:outline-none focus:border-sky-500 mb-4">
-            <button onclick="handleRegister()" class="w-full bg-gray-800 text-white py-3 rounded-lg font-bold shadow-lg hover:bg-gray-900 transition">CREATE ACCOUNT</button>
+        <div id="register-form" class="hidden space-y-3 transition-all duration-300">
+            <div>
+                <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1 ml-1">Full Name</label>
+                <input type="text" id="reg-name" placeholder="Your Name" class="auth-input w-full bg-gray-50 border border-gray-200 p-3 rounded-xl focus:outline-none focus:border-sky-500 focus:bg-white text-sm text-gray-700 font-medium">
+            </div>
+            <div>
+                <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1 ml-1">Email Address</label>
+                <input type="email" id="reg-email" placeholder="example@gmail.com" class="auth-input w-full bg-gray-50 border border-gray-200 p-3 rounded-xl focus:outline-none focus:border-sky-500 focus:bg-white text-sm text-gray-700 font-medium">
+            </div>
+            <div>
+                <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1 ml-1">Phone Number</label>
+                <input type="number" id="reg-phone" placeholder="017xxxxxxxx" class="auth-input w-full bg-gray-50 border border-gray-200 p-3 rounded-xl focus:outline-none focus:border-sky-500 focus:bg-white text-sm text-gray-700 font-medium">
+            </div>
+            <div>
+                <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1 ml-1">Password</label>
+                <input type="password" id="reg-pass" placeholder="6+ characters" class="auth-input w-full bg-gray-50 border border-gray-200 p-3 rounded-xl focus:outline-none focus:border-sky-500 focus:bg-white text-sm text-gray-700 font-medium">
+            </div>
+            <button onclick="handleRegister()" class="w-full mt-2 bg-gradient-to-r from-gray-800 to-gray-900 text-white py-3.5 rounded-xl font-bold shadow-lg hover:from-gray-900 hover:to-black active:scale-[0.98] transition-all duration-300 text-sm tracking-wide">CREATE ACCOUNT</button>
         </div>
 
         <!-- Google / Gmail Login Option -->
-        <div class="mt-4">
+        <div class="mt-5">
             <div class="relative flex py-2 items-center">
-                <div class="flex-grow border-t border-gray-300"></div>
-                <span class="flex-shrink mx-4 text-gray-400 text-xs font-semibold uppercase">Or</span>
-                <div class="flex-grow border-t border-gray-300"></div>
+                <div class="flex-grow border-t border-gray-200"></div>
+                <span class="flex-shrink mx-4 text-gray-400 text-xs font-semibold uppercase tracking-wider">Or</span>
+                <div class="flex-grow border-t border-gray-200"></div>
             </div>
-            <button onclick="handleGoogleLogin()" class="w-full bg-white border border-gray-300 text-gray-700 py-3 rounded-lg font-bold shadow-sm hover:bg-gray-50 active:scale-95 transition flex items-center justify-center gap-3 mt-1">
+            <button onclick="handleGoogleLogin()" class="w-full bg-white border-2 border-gray-100 text-gray-700 py-3 rounded-xl font-bold shadow-sm hover:bg-gray-50 hover:border-sky-200 active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-3 mt-1 text-sm">
                 <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-5 h-5" alt="Google">
                 <span>Continue with Gmail</span>
             </button>
@@ -706,13 +761,13 @@
         if(view === 'login') {
             document.getElementById('login-form').classList.remove('hidden');
             document.getElementById('register-form').classList.add('hidden');
-            document.getElementById('btn-login-view').classList.add('bg-white', 'shadow', 'text-sky-600');
-            document.getElementById('btn-reg-view').classList.remove('bg-white', 'shadow', 'text-sky-600');
+            document.getElementById('btn-login-view').className = "w-1/2 py-2.5 rounded-lg font-bold text-xs bg-white shadow-md text-sky-600 transition-all duration-300";
+            document.getElementById('btn-reg-view').className = "w-1/2 py-2.5 rounded-lg font-bold text-xs text-gray-500 hover:text-gray-700 transition-all duration-300";
         } else {
             document.getElementById('login-form').classList.add('hidden');
             document.getElementById('register-form').classList.remove('hidden');
-            document.getElementById('btn-reg-view').classList.add('bg-white', 'shadow', 'text-sky-600');
-            document.getElementById('btn-login-view').classList.remove('bg-white', 'shadow', 'text-sky-600');
+            document.getElementById('btn-reg-view').className = "w-1/2 py-2.5 rounded-lg font-bold text-xs bg-white shadow-md text-sky-600 transition-all duration-300";
+            document.getElementById('btn-login-view').className = "w-1/2 py-2.5 rounded-lg font-bold text-xs text-gray-500 hover:text-gray-700 transition-all duration-300";
         }
     }
 
@@ -742,7 +797,6 @@
             .catch((err) => Swal.fire('Login Failed', err.message, 'error'));
     }
 
-    // --- GOOGLE / GMAIL LOGIN FUNCTION ---
     function handleGoogleLogin() {
         const provider = new firebase.auth.GoogleAuthProvider();
         provider.setCustomParameters({ prompt: 'select_account' });
@@ -1548,7 +1602,7 @@
     }
 
     function submitDeposit() {
-        const amt = document.getElementById('dep-amount').value;
+        const amt = document.getElementById('dep-amount.value') || document.getElementById('dep-amount').value;
         const trx = document.getElementById('dep-trx').value;
         if(!amt || !trx) return Swal.fire('Error', 'Fill all fields', 'warning');
         
