@@ -98,11 +98,11 @@
 <body class="select-none bg-slate-50">
 
 <!-- AUTH SECTION -->
-<section id="auth-sec" class="min-h-screen flex flex-col items-center justify-center p-6 bg-white z-50 fixed inset-0">
-    <div class="w-full max-w-sm">
+<section id="auth-sec" class="min-h-screen flex flex-col items-center justify-center p-6 bg-white z-50 fixed inset-0 overflow-y-auto">
+    <div class="w-full max-w-sm my-auto">
         <div class="text-center mb-8">
             <img id="auth-logo-img" src="https://placehold.co/200x80?text=Loading+Logo..." class="h-16 mx-auto mb-3 object-contain">
-            <p class="text-gray-500 text-sm">Best TopUp Service in BD AminX Topup </p>
+            <p class="text-gray-500 text-sm">Best TopUp Service in BD AminX Topup</p>
         </div>
 
         <div class="flex bg-gray-100 p-1 rounded-lg mb-6">
@@ -122,6 +122,19 @@
             <input type="number" id="reg-phone" placeholder="Phone Number" class="w-full bg-gray-50 border border-gray-300 p-3 rounded-lg focus:outline-none focus:border-sky-500 mb-3">
             <input type="password" id="reg-pass" placeholder="Password (6+ chars)" class="w-full bg-gray-50 border border-gray-300 p-3 rounded-lg focus:outline-none focus:border-sky-500 mb-4">
             <button onclick="handleRegister()" class="w-full bg-gray-800 text-white py-3 rounded-lg font-bold shadow-lg hover:bg-gray-900 transition">CREATE ACCOUNT</button>
+        </div>
+
+        <!-- Google / Gmail Login Option -->
+        <div class="mt-4">
+            <div class="relative flex py-2 items-center">
+                <div class="flex-grow border-t border-gray-300"></div>
+                <span class="flex-shrink mx-4 text-gray-400 text-xs font-semibold uppercase">Or</span>
+                <div class="flex-grow border-t border-gray-300"></div>
+            </div>
+            <button onclick="handleGoogleLogin()" class="w-full bg-white border border-gray-300 text-gray-700 py-3 rounded-lg font-bold shadow-sm hover:bg-gray-50 active:scale-95 transition flex items-center justify-center gap-3 mt-1">
+                <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-5 h-5" alt="Google">
+                <span>Continue with Gmail</span>
+            </button>
         </div>
     </div>
 </section>
@@ -378,28 +391,22 @@
             </div>
         </section>
 
-        <!-- ADD MONEY SECTION (REDESIGNED GATEWAY STYLE) -->
+        <!-- ADD MONEY SECTION -->
         <section id="addmoney-sec" class="hidden animate-fade-in pb-20">
             <div class="flex items-center justify-between mb-4 px-2">
                 <h2 class="font-bold text-xl text-gray-800">Add Money</h2>
                 <button onclick="toggleAddMoneyView('history')" id="btn-history-toggle" class="text-xs font-bold text-sky-600 bg-sky-50 px-3 py-1.5 rounded-lg border border-sky-200"><i class="fas fa-history mr-1"></i> Deposit History</button>
             </div>
             
-            <!-- Manual Payment & Deposit History View -->
             <div id="manual-payment-view">
-                <!-- Gateway Selector Tabs -->
                 <div class="flex bg-white p-1 rounded-xl shadow-sm border border-gray-200 mb-5">
                     <button onclick="switchGatewayTab('all')" id="tab-all-gateway" class="flex-1 py-2 rounded-lg font-bold text-xs bg-sky-500 text-white transition shadow-sm">সব পদ্ধতি</button>
                     <button onclick="switchGatewayTab('mfs')" id="tab-mfs-gateway" class="flex-1 py-2 rounded-lg font-bold text-xs text-gray-600 transition">মোবাইল ব্যাংকিং</button>
                 </div>
 
                 <div id="add-money-content">
-                    <!-- Dynamic Payment Gateways Grid -->
-                    <div id="payment-gateways-grid" class="grid grid-cols-2 gap-3 mb-6">
-                        <!-- Dynamic generated gateway cards will load here -->
-                    </div>
+                    <div id="payment-gateways-grid" class="grid grid-cols-2 gap-3 mb-6"></div>
 
-                    <!-- Selected Gateway Form (Hidden by default until a gateway is clicked) -->
                     <div id="payment-form-container" class="hidden bg-white p-5 rounded-2xl shadow-lg border border-gray-100">
                         <div class="flex justify-between items-center mb-4">
                             <div class="flex items-center gap-2">
@@ -452,8 +459,9 @@
         <!-- ACCOUNT SECTION -->
         <section id="account-sec" class="hidden animate-fade-in">
             <div class="bg-white p-6 rounded-xl shadow-sm mb-4 text-center border border-gray-100">
-                <div class="w-20 h-20 bg-sky-50 rounded-full mx-auto flex items-center justify-center text-sky-500 text-3xl mb-3 shadow-inner">
-                    <i class="fas fa-user-circle text-5xl"></i>
+                <div class="w-20 h-20 bg-sky-50 rounded-full mx-auto flex items-center justify-center text-sky-500 text-3xl mb-3 shadow-inner overflow-hidden">
+                    <img id="profile-avatar" src="" class="w-full h-full object-cover hidden">
+                    <i id="profile-default-icon" class="fas fa-user-circle text-5xl"></i>
                 </div>
                 
                 <h2 id="profile-name" class="font-bold text-xl text-gray-800">User Name</h2>
@@ -596,11 +604,8 @@
     let selectedPaymentMethod = 'wallet'; 
     let gamesData = {};
     
-    // Dynamic UID Check API Variables
     let dynamicUidApiUrl = "";
     let dynamicUidApiKey = "";
-
-    // Default Gateways Data (Admin থেকে ডাইনামিক্যালি পরিবর্তন করা যাবে)
     let paymentGatewaysData = {};
 
     function loadGlobalSettings() {
@@ -608,7 +613,7 @@
             if (doc.exists) {
                 const data = doc.data();
                 const logoUrl = data.logoUrl || "https://placehold.co/150x50?text=No+Logo";
-                const siteName = data.siteName || "Nenox Shop";
+                const siteName = data.siteName || "AminX Topup";
                 
                 dynamicUidApiUrl = data.uidApiUrl || "";
                 dynamicUidApiKey = data.uidApiKey || "";
@@ -642,13 +647,11 @@
             }
         });
 
-        // Load Payment Gateways from Admin Firestore (admin -> payment)
         db.collection("admin").doc("payment").onSnapshot((doc) => {
             if(doc.exists) {
                 paymentGatewaysData = doc.data();
                 renderPaymentGateways('all');
             } else {
-                // Fallback default gateways if admin payment doc doesn't exist yet
                 paymentGatewaysData = {
                     bkashMerchant: { name: "bKash Merchant", number: "01800000000", logo: "https://i.ibb.co.com/9kCCTNsx/1656227518bkash-logo-png.png", active: true, type: "Merchant" },
                     bkashPayment: { name: "bKash Payment", number: "01811111111", logo: "https://i.ibb.co.com/9kCCTNsx/1656227518bkash-logo-png.png", active: true, type: "Payment" },
@@ -663,13 +666,11 @@
     }
     loadGlobalSettings();
 
-    // Render Payment Gateways Dynamically based on Admin data
     function renderPaymentGateways(filter) {
         const grid = document.getElementById('payment-gateways-grid');
         grid.innerHTML = "";
 
         for (const [key, gw] of Object.entries(paymentGatewaysData)) {
-            // Skip non-gateway keys if any
             if(typeof gw !== 'object' || gw === null) continue;
             if(gw.active === false) continue;
 
@@ -718,13 +719,14 @@
     function handleRegister() {
         const name = document.getElementById('reg-name').value;
         const email = document.getElementById('reg-email').value;
+        const phone = document.getElementById('reg-phone').value;
         const pass = document.getElementById('reg-pass').value;
         if(!name || !email || !pass) return Swal.fire('Error', 'Please fill all fields', 'error');
 
         Swal.showLoading();
         auth.createUserWithEmailAndPassword(email, pass)
             .then((cred) => db.collection('users').doc(cred.user.uid).set({
-                name: name, email: email, balance: 0, createdAt: new Date()
+                name: name, email: email, phone: phone || "", balance: 0, createdAt: new Date()
             }))
             .then(() => Swal.fire('Success', 'Account Created!', 'success'))
             .catch((err) => Swal.fire('Error', err.message, 'error'));
@@ -735,7 +737,45 @@
         const pass = document.getElementById('login-pass').value;
         if(!email || !pass) return;
         Swal.showLoading();
-        auth.signInWithEmailAndPassword(email, pass).catch((err) => Swal.fire('Login Failed', err.message, 'error'));
+        auth.signInWithEmailAndPassword(email, pass)
+            .then(() => Swal.close())
+            .catch((err) => Swal.fire('Login Failed', err.message, 'error'));
+    }
+
+    // --- GOOGLE / GMAIL LOGIN FUNCTION ---
+    function handleGoogleLogin() {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        provider.setCustomParameters({ prompt: 'select_account' });
+        Swal.showLoading();
+
+        auth.signInWithPopup(provider)
+            .then(async (result) => {
+                const user = result.user;
+                const userDocRef = db.collection('users').doc(user.uid);
+                const docSnap = await userDocRef.get();
+
+                if (!docSnap.exists) {
+                    await userDocRef.set({
+                        name: user.displayName || "User",
+                        email: user.email,
+                        photoURL: user.photoURL || "",
+                        balance: 0,
+                        createdAt: new Date()
+                    });
+                }
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Login Successful!',
+                    text: `Welcome, ${user.displayName || user.email}`,
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+            })
+            .catch((err) => {
+                console.error("Google Sign-In Error:", err);
+                Swal.fire('Gmail Login Failed', err.message, 'error');
+            });
     }
 
     function handleLogout() { auth.signOut().then(() => location.reload()); }
@@ -745,6 +785,15 @@
             currentUser = user;
             document.getElementById('auth-sec').classList.add('hidden');
             document.getElementById('app-content').classList.remove('hidden');
+            
+            if (user.photoURL) {
+                const avatarImg = document.getElementById('profile-avatar');
+                const defaultIcon = document.getElementById('profile-default-icon');
+                avatarImg.src = user.photoURL;
+                avatarImg.classList.remove('hidden');
+                defaultIcon.classList.add('hidden');
+            }
+
             loadUserData(user.uid);
             calculateUserStats(user.uid);
             loadAppContent();
@@ -761,8 +810,8 @@
                 const data = doc.data();
                 userBalance = data.balance || 0;
                 document.getElementById('header-balance').innerText = userBalance;
-                document.getElementById('profile-name').innerText = data.name || "User";
-                document.getElementById('profile-email').innerText = data.email;
+                document.getElementById('profile-name').innerText = data.name || currentUser.displayName || "User";
+                document.getElementById('profile-email').innerText = data.email || currentUser.email;
                 document.getElementById('profile-balance').innerText = userBalance;
                 document.getElementById('user-bal-text').innerText = `৳ ${userBalance}`;
             }
