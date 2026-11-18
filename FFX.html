@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,7 +17,7 @@
 
     <style>
         *{ margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif; }
-        body { background-color: #f8fafc; }
+        body{ background:#020805; color:white; overflow-x:hidden; }
         .nav-gradient { background: white; color: #1e293b; }
         .active-tab { color: #03a9f4 !important; }
         .hidden { display: none !important; }
@@ -44,16 +44,10 @@
             transition: all 0.2s ease;
         }
         .product-card:hover { border-color: #81D4FA; }
-        .product-card.selected {
-            border: 1.5px solid #03a9f4;
-            background-color: #e1f5fe; 
-        }
-        .product-bullet {
-            height: 8px; width: 8px; background-color: #cbd5e1; border-radius: 50%; margin-right: 8px;
-        }
+        .product-card.selected { border: 1.5px solid #03a9f4; background-color: #e1f5fe; }
+        .product-bullet { height: 8px; width: 8px; background-color: #cbd5e1; border-radius: 50%; margin-right: 8px; }
         .product-card.selected .product-bullet { background-color: #03a9f4; }
 
-        /* Payment Option Select Cards */
         .pay-option-card {
             border: 2px solid #81D4FA;
             background: white;
@@ -63,216 +57,234 @@
             transition: all 0.2s ease;
             position: relative;
         }
-        .pay-option-card.selected {
-            border-color: #ef4444;
-            background-color: #fff;
-        }
-        .pay-option-card .check-badge {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            color: #ef4444;
-            display: none;
-        }
-        .pay-option-card.selected .check-badge {
-            display: block;
-        }
+        .pay-option-card.selected { border-color: #ef4444; background-color: #fff; }
+        .pay-option-card .check-badge { position: absolute; top: 8px; right: 8px; color: #ef4444; display: none; }
+        .pay-option-card.selected .check-badge { display: block; }
         
         #fab-container.is-open #fab-toggler { background-color: #dc2626; }
         #fab-container.is-open #fab-icon-open { transform: rotate(-180deg) scale(0); opacity: 0; }
         #fab-container.is-open #fab-icon-close { transform: scale(1) rotate(0); opacity: 1; }
         #fab-container.is-open #fab-options { transform: translateY(0); opacity: 1; pointer-events: auto; }
 
-        /* --- PREMIER GLOW LOGIN STYLES --- */
-        .auth-body {
+        /* --- YOUR PREMIER GLOW AUTH STYLES --- */
+        .auth-body-wrapper {
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            background: #030a06;
-            overflow: hidden;
+            background: #020805;
             color: white;
-        }
-        .background-orbs {
+            padding: 25px 0;
             position: fixed;
             inset: 0;
-            background: 
-            radial-gradient(circle at 15% 20%, #00ff8830, transparent 35%),
-            radial-gradient(circle at 85% 80%, #00ff8830, transparent 35%);
-            z-index: -1;
+            z-index: 50;
+            overflow-y: auto;
         }
-        .orb {
-            position: absolute;
-            width: 250px;
-            height: 250px;
-            border: 1px solid #00ff8830;
-            border-radius: 50%;
-            animation: moveOrb 8s infinite ease-in-out;
+        .background{
+            position:fixed;
+            inset:0;
+            background:
+            radial-gradient(circle at 15% 20%,#00ff8830,transparent 35%),
+            radial-gradient(circle at 85% 80%,#00ff8830,transparent 35%),
+            #020805;
+            z-index:-3;
         }
-        .orb.one { top: -100px; left: -80px; }
-        .orb.two { bottom: -120px; right: -80px; width: 350px; height: 350px; animation-delay: 2s; }
-        @keyframes moveOrb {
-            50% { transform: translateY(-35px) rotate(180deg); }
+        .orb{
+            position:absolute;
+            border:1px solid #00ff8840;
+            border-radius:50%;
+            animation:float 8s ease-in-out infinite;
         }
-        .login-card {
-            width: 90%;
-            max-width: 390px;
-            padding: 30px 24px;
-            background: rgba(8, 22, 14, 0.94);
-            border: 1px solid #00ff8855;
-            border-radius: 22px;
-            box-shadow: 0 0 50px #00ff8818;
-            animation: showCard .8s ease;
-            backdrop-filter: blur(15px);
+        .orb.one{ width:300px; height:300px; top:-100px; left:-100px; }
+        .orb.two{ width:400px; height:400px; bottom:-150px; right:-100px; animation-delay:2s; }
+        @keyframes float{ 50%{transform:translateY(-35px) rotate(180deg);} }
+
+        .particles{ position:fixed; inset:0; overflow:hidden; pointer-events:none; z-index:-1; }
+        .particle{
+            position:absolute; bottom:-20px; width:4px; height:4px;
+            background:#00ff88; border-radius:50%; box-shadow:0 0 12px #00ff88;
+            animation:particleMove linear infinite;
         }
-        @keyframes showCard {
-            from { opacity: 0; transform: translateY(40px) scale(.95); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
+        @keyframes particleMove{
+            0%{transform:translateY(0);opacity:0;} 15%{opacity:1;} 100%{transform:translateY(-110vh);opacity:0;}
         }
-        .logo-icon-box {
-            width: 55px;
-            height: 55px;
-            background: linear-gradient(135deg, #00ff88, #008f50);
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #002a15;
-            font-size: 26px;
-            margin: auto;
-            box-shadow: 0 0 25px #00ff8860;
+
+        .login-card{
+            width:90%;
+            max-width:410px;
+            padding:32px 28px;
+            background:rgba(5,20,12,.95);
+            border:1px solid #00ff8870;
+            border-radius:23px;
+            position:relative;
+            isolation:isolate;
+            overflow:hidden;
+            box-shadow:0 0 35px #00ff8820;
+            animation:cardEnter 1s ease,cardGlow 3s infinite alternate;
+            backdrop-filter:blur(15px);
         }
-        .input-box input {
-            width: 100%;
-            padding: 13px 40px;
-            border: 1px solid #ffffff20;
-            border-radius: 10px;
-            background: #ffffff08;
-            outline: none;
-            color: white;
-            font-size: 13px;
-            transition: .3s;
+        .login-card::before{
+            content:""; position:absolute; inset:-50%;
+            background:conic-gradient(transparent,#00ff88,transparent 30%);
+            animation:borderRotate 6s linear infinite; z-index:-2;
         }
-        .input-box input:focus {
-            border-color: #00ff88;
-            box-shadow: 0 0 12px #00ff8825;
+        .login-card::after{ content:""; position:absolute; inset:2px; border-radius:21px; background:#06140c; z-index:-1; }
+        @keyframes borderRotate{ to{transform:rotate(360deg);} }
+        @keyframes cardEnter{ from{opacity:0;transform:translateY(70px) scale(.85);filter:blur(8px);} to{opacity:1;transform:translateY(0) scale(1);filter:blur(0);} }
+        @keyframes cardGlow{ to{box-shadow:0 0 55px #00ff8860;} }
+
+        .aminx-logo{
+            width:90px; height:90px; display:block; object-fit:contain; margin:0 auto 10px;
+            filter:drop-shadow(0 0 15px #00ff88); animation:logoFloat 3s ease-in-out infinite;
         }
-        .login-btn {
-            width: 100%;
-            padding: 13px;
-            border: none;
-            border-radius: 10px;
-            background: linear-gradient(90deg, #00d978, #00ff88);
-            color: #002c17;
-            font-size: 14px;
-            font-weight: 800;
-            cursor: pointer;
-            transition: .3s;
+        @keyframes logoFloat{ 0%,100%{transform:translateY(0) scale(1);} 50%{transform:translateY(-10px) scale(1.05);} }
+
+        .input-group{ margin-top:16px; }
+        .input-group label{ display:block; font-size:12px; margin-bottom:6px; color:#c4d8cb; }
+        .input-box{ position:relative; }
+        .input-box input{
+            width:100%; padding:13px 43px; border:1px solid #ffffff20;
+            border-radius:11px; background:#ffffff08; color:white; outline:none; font-size:13px; transition:.3s;
         }
-        .login-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px #00ff8840;
+        .input-box input:focus{ border-color:#00ff88; box-shadow:0 0 20px #00ff8840; }
+        .input-box .left{ position:absolute; top:50%; left:15px; transform:translateY(-50%); color:#00ff88; font-size:13px; }
+        .toggle{ position:absolute; top:50%; right:15px; transform:translateY(-50%); cursor:pointer; color:#8fa99a; font-size:13px; }
+
+        .options{ display:flex; justify-content:space-between; align-items:center; margin:16px 0; font-size:11px; color:#a8bcae; }
+        .remember{ display:flex; align-items:center; gap:6px; }
+        .remember input{ accent-color:#00ff88; }
+        .options a{ color:#00ff88; text-decoration:none; }
+
+        .login-btn{
+            width:100%; padding:14px; border:none; border-radius:11px;
+            background:linear-gradient(90deg,#00d978,#00ff88); color:#002914;
+            font-size:14px; font-weight:800; cursor:pointer; position:relative; overflow:hidden;
+            transition:.3s; box-shadow:0 0 18px #00ff8840;
         }
+        .login-btn:hover{ transform:translateY(-3px); box-shadow:0 8px 30px #00ff8870; }
+        .login-btn:disabled{ opacity:.7; cursor:not-allowed; }
+
+        .divider{ display:flex; align-items:center; gap:12px; margin:18px 0; color:#71877a; font-size:12px; }
+        .divider::before, .divider::after{ content:""; height:1px; flex:1; background:#ffffff25; }
+
+        .social{ display:flex; gap:10px; }
+        .social button{
+            flex:1; padding:11px 5px; border:1px solid #ffffff25; background:#ffffff08;
+            border-radius:10px; color:white; font-size:11px; cursor:pointer; transition:.3s;
+        }
+        .social button:hover{ border-color:#00ff88; transform:translateY(-3px); }
     </style>
 </head>
 <body class="select-none">
 
-<!-- AUTH SECTION -->
-<section id="auth-sec" class="auth-body z-50 fixed inset-0 overflow-y-auto">
-    <div class="background-orbs">
+<!-- AUTH SECTION (LOGIN & REGISTER) -->
+<section id="auth-sec" class="auth-body-wrapper">
+    <div class="background">
         <div class="orb one"></div>
         <div class="orb two"></div>
     </div>
+    <div class="particles" id="particles"></div>
 
     <div class="login-card my-auto">
-        <div class="text-center mb-6">
-            <div class="logo-icon-box mb-3">
-                <i class="fas fa-bolt"></i>
-            </div>
-            <h2 class="text-2xl font-extrabold text-white">AminX <span class="text-[#00ff88]">Topup</span></h2>
-            <p class="text-[#91a99a] text-xs mt-1">Best TopUp Service in Bangladesh</p>
+        <div class="logo">
+            <img id="auth-logo-img" src="https://placehold.co/100x100?text=Logo" class="aminx-logo" alt="Logo">
+            <h2>AminX <span>Topup</span></h2>
+            <p id="auth-subtitle">Welcome Back! Login to Continue</p>
         </div>
 
-        <div class="flex bg-white/10 p-1 rounded-xl mb-5 border border-white/10">
-            <button onclick="toggleAuth('login')" id="btn-login-view" class="w-1/2 py-2 rounded-lg font-bold text-xs bg-[#00ff88] text-[#002c17] shadow transition">Login</button>
-            <button onclick="toggleAuth('register')" id="btn-reg-view" class="w-1/2 py-2 rounded-lg font-bold text-xs text-gray-400 hover:text-white transition">Register</button>
+        <!-- Login / Register Switch Tab -->
+        <div class="flex bg-white/10 p-1 rounded-xl mb-4 border border-white/10">
+            <button onclick="toggleAuthView('login')" id="btn-login-view" class="w-1/2 py-2 rounded-lg font-bold text-xs bg-[#00ff88] text-[#002c17] shadow transition">Login</button>
+            <button onclick="toggleAuthView('register')" id="btn-reg-view" class="w-1/2 py-2 rounded-lg font-bold text-xs text-gray-400 hover:text-white transition">Register</button>
         </div>
 
         <!-- LOGIN FORM -->
-        <div id="login-form" class="space-y-4">
-            <div>
-                <label class="block text-xs font-semibold text-[#c7d9cd] mb-1.5">Email Address</label>
-                <div class="input-box relative">
-                    <i class="fas fa-envelope absolute left-3.5 top-1/2 -translate-y-1/2 text-[#00ff88] text-xs"></i>
-                    <input type="email" id="login-email" placeholder="Enter your email" required>
+        <div id="login-form">
+            <div class="input-group">
+                <label>Email Address</label>
+                <div class="input-box">
+                    <i class="fas fa-envelope left"></i>
+                    <input type="email" id="login-email" placeholder="example@gmail.com" required>
                 </div>
             </div>
-            <div>
-                <label class="block text-xs font-semibold text-[#c7d9cd] mb-1.5">Password</label>
-                <div class="input-box relative">
-                    <i class="fas fa-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-[#00ff88] text-xs"></i>
-                    <input type="password" id="login-pass" placeholder="Enter your password" required>
-                    <i class="fas fa-eye absolute right-3.5 top-1/2 -translate-y-1/2 cursor-pointer text-[#91a99a] text-xs" id="login-eye" onclick="togglePassword('login-pass', 'login-eye')"></i>
-                </div>
-            </div>
-            <button onclick="handleLogin()" class="login-btn mt-2">LOG IN</button>
-        </div>
 
-        <!-- REGISTER FORM -->
-        <div id="register-form" class="hidden space-y-3.5">
-            <div>
-                <label class="block text-xs font-semibold text-[#c7d9cd] mb-1">Full Name</label>
-                <div class="input-box relative">
-                    <i class="fas fa-user absolute left-3.5 top-1/2 -translate-y-1/2 text-[#00ff88] text-xs"></i>
-                    <input type="text" id="reg-name" placeholder="Your Name" required>
+            <div class="input-group">
+                <label>Password</label>
+                <div class="input-box">
+                    <i class="fas fa-lock left"></i>
+                    <input type="password" id="login-password" placeholder="Enter your password" required>
+                    <i class="fas fa-eye toggle" id="login-eye" onclick="togglePassword('login-password', 'login-eye')"></i>
                 </div>
             </div>
-            <div>
-                <label class="block text-xs font-semibold text-[#c7d9cd] mb-1">Email Address</label>
-                <div class="input-box relative">
-                    <i class="fas fa-envelope absolute left-3.5 top-1/2 -translate-y-1/2 text-[#00ff88] text-xs"></i>
-                    <input type="email" id="reg-email" placeholder="example@gmail.com" required>
-                </div>
-            </div>
-            <div>
-                <label class="block text-xs font-semibold text-[#c7d9cd] mb-1">Phone Number</label>
-                <div class="input-box relative">
-                    <i class="fas fa-phone absolute left-3.5 top-1/2 -translate-y-1/2 text-[#00ff88] text-xs"></i>
-                    <input type="number" id="reg-phone" placeholder="017xxxxxxxx" required>
-                </div>
-            </div>
-            <div>
-                <label class="block text-xs font-semibold text-[#c7d9cd] mb-1">Password</label>
-                <div class="input-box relative">
-                    <i class="fas fa-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-[#00ff88] text-xs"></i>
-                    <input type="password" id="reg-pass" placeholder="6+ characters" required>
-                    <i class="fas fa-eye absolute right-3.5 top-1/2 -translate-y-1/2 cursor-pointer text-[#91a99a] text-xs" id="reg-eye" onclick="togglePassword('reg-pass', 'reg-eye')"></i>
-                </div>
-            </div>
-            <button onclick="handleRegister()" class="login-btn mt-2 bg-gradient-to-r from-gray-700 to-gray-800 text-white">CREATE ACCOUNT</button>
-        </div>
 
-        <!-- Google / Gmail Login Option -->
-        <div class="mt-4">
-            <div class="relative flex py-2 items-center">
-                <div class="flex-grow border-t border-white/15"></div>
-                <span class="flex-shrink mx-3 text-gray-400 text-[11px] uppercase tracking-wider">Or</span>
-                <div class="flex-grow border-t border-white/15"></div>
+            <div class="options">
+                <label class="remember">
+                    <input type="checkbox" id="remember"> Remember Me
+                </label>
+                <a href="#" onclick="handleForgotPassword(event)">Forgot Password?</a>
             </div>
-            <button onclick="handleGoogleLogin()" class="w-full bg-white/5 border border-white/20 text-white py-2.5 rounded-xl font-bold text-xs shadow-sm hover:bg-white/10 active:scale-[0.98] transition flex items-center justify-center gap-2.5 mt-1">
-                <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-4 h-4">
-                <span>Continue with Gmail</span>
+
+            <button class="login-btn" type="button" onclick="handleLogin()" id="loginBtn">
+                <i class="fas fa-sign-in-alt"></i> LOGIN NOW
             </button>
         </div>
 
-        <div class="text-center mt-5 text-[#718578] text-[11px]">
-            Secure Login Powered by <span class="text-[#00ff88] font-semibold">AminX Topup</span>
+        <!-- REGISTER FORM -->
+        <div id="register-form" class="hidden">
+            <div class="input-group">
+                <label>Full Name</label>
+                <div class="input-box">
+                    <i class="fas fa-user left"></i>
+                    <input type="text" id="reg-name" placeholder="Your Name" required>
+                </div>
+            </div>
+            <div class="input-group">
+                <label>Email Address</label>
+                <div class="input-box">
+                    <i class="fas fa-envelope left"></i>
+                    <input type="email" id="reg-email" placeholder="example@gmail.com" required>
+                </div>
+            </div>
+            <div class="input-group">
+                <label>Phone Number</label>
+                <div class="input-box">
+                    <i class="fas fa-phone left"></i>
+                    <input type="number" id="reg-phone" placeholder="017xxxxxxxx" required>
+                </div>
+            </div>
+            <div class="input-group">
+                <label>Password</label>
+                <div class="input-box">
+                    <i class="fas fa-lock left"></i>
+                    <input type="password" id="reg-password" placeholder="6+ characters" required>
+                    <i class="fas fa-eye toggle" id="reg-eye" onclick="togglePassword('reg-password', 'reg-eye')"></i>
+                </div>
+            </div>
+            <button class="login-btn mt-4" type="button" onclick="handleRegister()" id="regBtn">
+                <i class="fas fa-user-plus"></i> CREATE ACCOUNT
+            </button>
+        </div>
+
+        <div class="divider">OR</div>
+
+        <div class="social">
+            <button type="button" onclick="handleGoogleLogin()">
+                <i class="fab fa-google text-red-400"></i> Google
+            </button>
+            <button type="button" onclick="alert('Discord login not connected.')">
+                <i class="fab fa-discord text-blue-400"></i> Discord
+            </button>
+        </div>
+
+        <div class="footer text-center mt-5 text-[11px] text-[#819688]">
+            Secure Login Powered by <span class="text-[#00ff88] font-bold">AminX Topup</span>
+            <br>© 2026 AminX Topup. All Rights Reserved.
         </div>
     </div>
 </section>
 
 <!-- APP CONTENT -->
-<div id="app-content" class="hidden relative max-w-md mx-auto bg-slate-50 min-h-screen shadow-2xl">
+<div id="app-content" class="hidden relative max-w-md mx-auto bg-slate-50 min-h-screen shadow-2xl text-gray-800">
     <!-- Header -->
     <header class="bg-white p-4 sticky top-0 z-40 flex justify-between items-center shadow-sm">
         <div class="flex items-center gap-2">
@@ -322,8 +334,7 @@
 
                 <a id="home-app-dl" href="#" target="_blank" class="bg-white py-2 rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.05)] border border-gray-100 flex flex-col items-center justify-center gap-1.5 active:scale-95 transition h-24 no-underline">
                     <div class="w-10 h-10 rounded-full overflow-hidden shadow-sm">
-                        <img id="user-app-dl-img" src="https://i.ibb.co/WvrTGr5Y/google-play-store-logo-1273375-804.jpg" 
-                             class="w-full h-full object-cover" alt="App DL">
+                        <img id="user-app-dl-img" src="https://i.ibb.co/WvrTGr5Y/google-play-store-logo-1273375-804.jpg" class="w-full h-full object-cover" alt="App DL">
                     </div>
                     <span class="text-[11px] font-bold text-gray-700 text-center leading-tight">App<br>Download</span>
                 </a>
@@ -476,7 +487,6 @@
                 </div>
 
                 <div class="grid grid-cols-2 gap-3">
-                    <!-- Pay With Wallet -->
                     <div id="pay-wallet-card" onclick="selectPaymentOption('wallet')" class="pay-option-card selected">
                         <i class="fas fa-check-circle check-badge text-sm"></i>
                         <div class="h-12 flex items-center justify-center mb-2">
@@ -485,7 +495,6 @@
                         <p class="text-xs font-bold text-gray-700 text-center">Pay With Wallet</p>
                     </div>
 
-                    <!-- Instant Pay -->
                     <div id="pay-instant-card" onclick="selectPaymentOption('instant')" class="pay-option-card">
                         <i class="fas fa-check-circle check-badge text-sm"></i>
                         <div class="h-12 flex items-center justify-center mb-2">
@@ -495,7 +504,6 @@
                     </div>
                 </div>
 
-                <!-- Wallet balance info notes -->
                 <div class="mt-4 space-y-1">
                     <p class="text-xs text-gray-500"><i class="far fa-info-circle mr-1 text-sky-500"></i> প্রোডাক্ট কিনতে আপনার প্রয়োজন <span id="req-price-text" class="font-bold text-red-500">৳ 0</span> টাকা।</p>
                     <p class="text-xs text-gray-500"><i class="far fa-info-circle mr-1 text-sky-500"></i> আপনার একাউন্ট ব্যালেন্স <span id="user-bal-text" class="font-bold text-sky-600">৳ 0</span> টাকা।</p>
@@ -711,7 +719,18 @@
 </div>
 
 <script>
-    // --- 1. FIREBASE CONFIGURATION ---
+    // --- PARTICLES GENERATOR ---
+    const particleBox = document.getElementById("particles");
+    for(let i=0; i<35; i++){
+        const p = document.createElement("span");
+        p.className = "particle";
+        p.style.left = Math.random() * 100 + "%";
+        p.style.animationDuration = (5 + Math.random() * 8) + "s";
+        p.style.animationDelay = (Math.random() * 8) + "s";
+        particleBox.appendChild(p);
+    }
+
+    // --- FIREBASE CONFIGURATION ---
     const firebaseConfig = {
       apiKey: "AIzaSyBos2wjezADgbGVTcZehMf0-QEOfS7DKxo",
       authDomain: "alx-topup.firebaseapp.com",
@@ -744,12 +763,13 @@
         db.collection("settings").doc("general").onSnapshot((doc) => {
             if (doc.exists) {
                 const data = doc.data();
-                const logoUrl = data.logoUrl || "https://placehold.co/150x50?text=No+Logo";
+                const logoUrl = data.logoUrl || "https://placehold.co/150x50?text=Logo";
                 const siteName = data.siteName || "AminX Topup";
                 
                 dynamicUidApiUrl = data.uidApiUrl || "";
                 dynamicUidApiKey = data.uidApiKey || "";
                 
+                document.getElementById('auth-logo-img').src = logoUrl;
                 document.getElementById('header-logo-img').src = logoUrl;
                 document.getElementById('about-logo-img').src = logoUrl;
                 document.getElementById('about-site-name').innerText = siteName;
@@ -800,10 +820,8 @@
     function renderPaymentGateways(filter) {
         const grid = document.getElementById('payment-gateways-grid');
         grid.innerHTML = "";
-
         for (const [key, gw] of Object.entries(paymentGatewaysData)) {
-            if(typeof gw !== 'object' || gw === null) continue;
-            if(gw.active === false) continue;
+            if(typeof gw !== 'object' || gw === null || gw.active === false) continue;
             if(filter === 'mfs' && gw.type === 'QR Code') continue;
 
             grid.innerHTML += `
@@ -819,7 +837,6 @@
     function switchGatewayTab(tab) {
         const btnAll = document.getElementById('tab-all-gateway');
         const btnMfs = document.getElementById('tab-mfs-gateway');
-        
         if(tab === 'all') {
             btnAll.className = "flex-1 py-2 rounded-lg font-bold text-xs bg-sky-500 text-white transition shadow-sm";
             btnMfs.className = "flex-1 py-2 rounded-lg font-bold text-xs text-gray-600 transition";
@@ -831,16 +848,18 @@
         }
     }
 
-    // --- 2. AUTH LOGIC ---
-    function toggleAuth(view) {
+    // --- AUTH SWITCH & PASSWORD TOGGLE ---
+    function toggleAuthView(view) {
         if(view === 'login') {
             document.getElementById('login-form').classList.remove('hidden');
             document.getElementById('register-form').classList.add('hidden');
+            document.getElementById('auth-subtitle').innerText = "Welcome Back! Login to Continue";
             document.getElementById('btn-login-view').className = "w-1/2 py-2 rounded-lg font-bold text-xs bg-[#00ff88] text-[#002c17] shadow transition";
             document.getElementById('btn-reg-view').className = "w-1/2 py-2 rounded-lg font-bold text-xs text-gray-400 hover:text-white transition";
         } else {
             document.getElementById('login-form').classList.add('hidden');
             document.getElementById('register-form').classList.remove('hidden');
+            document.getElementById('auth-subtitle').innerText = "Create New Account & Start Topup";
             document.getElementById('btn-reg-view').className = "w-1/2 py-2 rounded-lg font-bold text-xs bg-[#00ff88] text-[#002c17] shadow transition";
             document.getElementById('btn-login-view').className = "w-1/2 py-2 rounded-lg font-bold text-xs text-gray-400 hover:text-white transition";
         }
@@ -852,34 +871,52 @@
         if(pass.type === "password"){
             pass.type = "text";
             eye.classList.replace("fa-eye","fa-eye-slash");
-            eye.style.color = "#00ff88";
-        }else{
+        } else {
             pass.type = "password";
             eye.classList.replace("fa-eye-slash","fa-eye");
-            eye.style.color = "#91a99a";
         }
+    }
+
+    function handleForgotPassword(e) {
+        e.preventDefault();
+        Swal.fire({
+            title: 'Reset Password',
+            input: 'email',
+            inputLabel: 'Enter your account email',
+            inputPlaceholder: 'example@gmail.com',
+            showCancelButton: true,
+            confirmButtonText: 'Send Reset Link',
+            confirmButtonColor: '#00ff88'
+        }).then((result) => {
+            if (result.value) {
+                auth.sendPasswordResetEmail(result.value)
+                    .then(() => Swal.fire('Success', 'Password reset email sent!', 'success'))
+                    .catch(err => Swal.fire('Error', err.message, 'error'));
+            }
+        });
     }
 
     function handleRegister() {
         const name = document.getElementById('reg-name').value;
         const email = document.getElementById('reg-email').value;
         const phone = document.getElementById('reg-phone').value;
-        const pass = document.getElementById('reg-pass').value;
-        if(!name || !email || !pass) return Swal.fire('Error', 'Please fill all fields', 'error');
+        const pass = document.getElementById('reg-password').value;
+        if(!name || !email || !pass) return Swal.fire('Error', 'Please fill all required fields', 'error');
 
         Swal.showLoading();
         auth.createUserWithEmailAndPassword(email, pass)
             .then((cred) => db.collection('users').doc(cred.user.uid).set({
                 name: name, email: email, phone: phone || "", balance: 0, createdAt: new Date()
             }))
-            .then(() => Swal.fire('Success', 'Account Created!', 'success'))
+            .then(() => Swal.fire('Success', 'Account Created Successfully!', 'success'))
             .catch((err) => Swal.fire('Error', err.message, 'error'));
     }
 
     function handleLogin() {
         const email = document.getElementById('login-email').value;
-        const pass = document.getElementById('login-pass').value;
-        if(!email || !pass) return Swal.fire('Error', 'Please enter email and password', 'warning');
+        const pass = document.getElementById('login-password').value;
+        if(!email || !pass) return Swal.fire('Warning', 'Please enter email and password', 'warning');
+
         Swal.showLoading();
         auth.signInWithEmailAndPassword(email, pass)
             .then(() => Swal.close())
@@ -906,19 +943,9 @@
                         createdAt: new Date()
                     });
                 }
-
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Login Successful!',
-                    text: `Welcome, ${user.displayName || user.email}`,
-                    timer: 1500,
-                    showConfirmButton: false
-                });
+                Swal.fire({ icon: 'success', title: 'Login Successful!', text: `Welcome, ${user.displayName || user.email}`, timer: 1500, showConfirmButton: false });
             })
-            .catch((err) => {
-                console.error("Google Sign-In Error:", err);
-                Swal.fire('Gmail Login Failed', err.message, 'error');
-            });
+            .catch((err) => Swal.fire('Google Login Failed', err.message, 'error'));
     }
 
     function handleLogout() { auth.signOut().then(() => location.reload()); }
@@ -962,13 +989,9 @@
     }
 
     function calculateUserStats(uid) {
-        document.getElementById('profile-total-orders').innerText = "...";
-        document.getElementById('profile-total-spent').innerText = "...";
-
         db.collection('orders').where('userId', '==', uid).get().then((snapshot) => {
             let totalOrders = 0;
             let totalSpent = 0;
-
             snapshot.forEach((doc) => {
                 const data = doc.data();
                 totalOrders++;
@@ -977,17 +1000,15 @@
                     totalSpent += parseInt(data.price || 0);
                 }
             });
-
             document.getElementById('profile-total-orders').innerText = totalOrders;
             document.getElementById('profile-total-spent').innerText = totalSpent;
-        }).catch(err => {
-            console.error("Stats Error:", err);
+        }).catch(() => {
             document.getElementById('profile-total-orders').innerText = "0";
             document.getElementById('profile-total-spent').innerText = "0";
         });
     }
 
-    // --- 3. APP CONTENT & FEATURES ---
+    // --- APP CONTENT & GAME LOADER ---
     function loadAppContent() {
         const waLink = "https://wa.me/8801862697277?text=Hello";
         const tgLink = "https://t.me/alamintg";
@@ -1029,16 +1050,12 @@
             }
 
             const categoriesMap = new Map();
-            categoriesSnap.forEach(doc => {
-                categoriesMap.set(doc.id, { ...doc.data(), games: [] });
-            });
-            
+            categoriesSnap.forEach(doc => categoriesMap.set(doc.id, { ...doc.data(), games: [] }));
             let uncategorizedGames = [];
 
             servicesSnap.forEach(doc => {
                 const game = { id: doc.id, ...doc.data() };
                 gamesData[doc.id] = game;
-                
                 if (game.categoryId && categoriesMap.has(game.categoryId)) {
                     categoriesMap.get(game.categoryId).games.push(game);
                 } else {
@@ -1046,13 +1063,10 @@
                 }
             });
 
-            categoriesMap.forEach((cat) => {
-                cat.games.sort((a,b) => (a.order || 0) - (b.order || 0));
-            });
+            categoriesMap.forEach((cat) => cat.games.sort((a,b) => (a.order || 0) - (b.order || 0)));
             uncategorizedGames.sort((a,b) => (a.order || 0) - (b.order || 0));
 
             listContainer.innerHTML = "";
-
             categoriesMap.forEach((category) => {
                 if (category.games.length > 0) {
                     let gamesHTML = '';
@@ -1068,7 +1082,6 @@
                             </div>
                         </div>`;
                     });
-
                     listContainer.innerHTML += `
                     <div>
                         <h3 class="font-bold text-gray-700 text-lg border-l-4 border-sky-500 pl-2 mb-3">${category.name}</h3>
@@ -1098,7 +1111,7 @@
                 </div>`;
             }
         } catch (error) {
-            console.error("Failed to load games and categories:", error);
+            console.error("Games Load Error:", error);
         }
     }
 
@@ -1109,7 +1122,6 @@
             let tuts = [];
             snapshot.forEach(doc => tuts.push(doc.data()));
             tuts.sort((a,b) => (a.order || 0) - (b.order || 0));
-
             tuts.forEach(data => {
                 container.innerHTML += `
                     <div class="mx-5 bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 mb-6">
@@ -1123,7 +1135,6 @@
         });
     }
 
-    // --- 4. TOPUP SYSTEM ---
     function openTopUpPage(gameId, gameName, gameImg) {
         selectedGameId = gameId;
         selectedGameName = gameName;
@@ -1138,8 +1149,7 @@
         document.getElementById('topup-game-img').src = gameImg;
 
         const checkBtn = document.getElementById("uidCheckBtn");
-        checkBtn.classList.remove("bg-black", "bg-red-600");
-        checkBtn.classList.add("bg-gradient-to-r", "from-blue-400", "to-teal-400");
+        checkBtn.className = "mt-3 bg-gradient-to-r from-blue-400 to-teal-400 text-white text-center py-2 rounded-lg font-bold text-sm shadow-md cursor-pointer transition-all duration-300";
         checkBtn.innerHTML = "Check to Player Name";
 
         const playerSection = document.getElementById('player-id-section');
@@ -1176,7 +1186,6 @@
                     grid.innerHTML = `<div class="col-span-2 text-center text-gray-400 py-4">No packages available</div>`;
                     return;
                 }
-                
                 let prods = [];
                 snapshot.forEach(doc => prods.push({ id: doc.id, ...doc.data() }));
                 prods.sort((a,b) => (a.order !== undefined ? a.order - b.order : a.price - b.price));
@@ -1218,7 +1227,6 @@
         selectedPaymentMethod = method;
         const walletCard = document.getElementById('pay-wallet-card');
         const instantCard = document.getElementById('pay-instant-card');
-
         if(method === 'wallet') {
             walletCard.classList.add('selected');
             instantCard.classList.remove('selected');
@@ -1230,10 +1238,7 @@
     }
 
     async function processOrder() {
-        if (selectedPaymentMethod === 'instant') {
-            showSec('addmoney');
-            return;
-        }
+        if (selectedPaymentMethod === 'instant') { showSec('addmoney'); return; }
 
         let playerId = "N/A";
         if(selectedGameType === 'uid' || selectedGameType === 'auto-topup') {
@@ -1247,44 +1252,29 @@
         
         if(userBalance < selectedProduct.price) {
             return Swal.fire({ 
-                icon: 'error', 
-                title: 'Low Balance', 
-                text: 'Please Add Money first.',
-                showCancelButton: true,
-                confirmButtonText: 'Add Money Now'
-            }).then((res) => {
-                if(res.isConfirmed) showSec('addmoney');
-            });
+                icon: 'error', title: 'Low Balance', text: 'Please Add Money first.',
+                showCancelButton: true, confirmButtonText: 'Add Money Now'
+            }).then((res) => { if(res.isConfirmed) showSec('addmoney'); });
         }
 
         const result = await Swal.fire({
             title: 'Confirm Purchase?',
             html: `Item: ${selectedProduct.name}<br>Price: ৳${selectedProduct.price}<br>Method: Wallet Pay`,
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#03a9f4',
-            confirmButtonText: 'Yes, Buy Now'
+            icon: 'question', showCancelButton: true, confirmButtonColor: '#03a9f4', confirmButtonText: 'Yes, Buy Now'
         });
 
         if (result.isConfirmed) {
             Swal.showLoading();
-            if (selectedGameType === 'code') {
-                processVoucherOrder();
-            } else if (selectedGameType === 'auto-topup') {
-                processAutoTopUpOrder(playerId);
-            } else {
-                processUidOrder(playerId);
-            }
+            if (selectedGameType === 'code') processVoucherOrder();
+            else if (selectedGameType === 'auto-topup') processAutoTopUpOrder(playerId);
+            else processUidOrder(playerId);
         }
     }
     
     async function processVoucherOrder() {
         const stockRef = db.collection('services').doc(selectedGameId).collection('products').doc(selectedProduct.id).collection('stock');
         const availableStockSnap = await stockRef.where('status', '==', 'available').limit(1).get();
-
-        if (availableStockSnap.empty) {
-            return Swal.fire('Out of Stock', 'Sorry, this product is currently unavailable.', 'error');
-        }
+        if (availableStockSnap.empty) return Swal.fire('Out of Stock', 'Sorry, this product is currently unavailable.', 'error');
 
         const stockDoc = availableStockSnap.docs[0];
         const voucherCode = stockDoc.data().code;
@@ -1295,7 +1285,6 @@
                 const uDoc = await t.get(userRef);
                 const newBal = uDoc.data().balance - selectedProduct.price;
                 if(newBal < 0) throw new Error("Insufficient Balance");
-
                 t.update(userRef, { balance: newBal });
                 t.delete(stockDoc.ref); 
                 t.update(db.collection('services').doc(selectedGameId).collection('products').doc(selectedProduct.id), {
@@ -1319,43 +1308,31 @@
     function processUidOrder(playerId) {
         const newBalance = userBalance - selectedProduct.price;
         db.collection('users').doc(currentUser.uid).update({ balance: newBalance })
-        .then(() => {
-            return db.collection('orders').add({
-                userId: currentUser.uid, userName: currentUser.email, gameName: selectedGameName, gameId: selectedGameId,
-                playerId: playerId, productName: selectedProduct.name, price: selectedProduct.price, type: 'uid',
-                status: 'pending', paymentMethod: 'wallet', date: new Date()
-            });
-        })
-        .then(() => {
-            Swal.fire('Success', 'Order Placed Successfully!', 'success');
-            showSec('home');
-        })
+        .then(() => db.collection('orders').add({
+            userId: currentUser.uid, userName: currentUser.email, gameName: selectedGameName, gameId: selectedGameId,
+            playerId: playerId, productName: selectedProduct.name, price: selectedProduct.price, type: 'uid',
+            status: 'pending', paymentMethod: 'wallet', date: new Date()
+        }))
+        .then(() => { Swal.fire('Success', 'Order Placed Successfully!', 'success'); showSec('home'); })
         .catch(err => Swal.fire('Error', err.message, 'error'));
     }
 
     async function processAutoTopUpOrder(playerId) {
         const settingsDoc = await db.collection("settings").doc("general").get();
-        if (!settingsDoc.exists) {
-            return Swal.fire('Configuration Error', 'Admin settings not found. Please contact support.', 'error');
-        }
+        if (!settingsDoc.exists) return Swal.fire('Configuration Error', 'Admin settings not found.', 'error');
         const settings = settingsDoc.data();
         const apiKey = settings.autoTopUpApiKey;
         const apiUrl = settings.autoTopUpApiUrl;
         const callbackUrl = settings.autoTopUpCallbackUrl;
 
-        if (!apiKey || !apiUrl || !callbackUrl) {
-            return Swal.fire('Configuration Error', 'Auto TopUp is not configured correctly.', 'error');
-        }
+        if (!apiKey || !apiUrl || !callbackUrl) return Swal.fire('Configuration Error', 'Auto TopUp is not configured correctly.', 'error');
 
         const stockRef = db.collection('services').doc(selectedGameId).collection('products').doc(selectedProduct.id).collection('stock');
         const availableStockSnap = await stockRef.where('status', '==', 'available').limit(1).get();
+        if (availableStockSnap.empty) return Swal.fire('Out of Stock', 'Sorry, product unavailable.', 'error');
 
-        if (availableStockSnap.empty) {
-            return Swal.fire('Out of Stock', 'Sorry, this product is currently unavailable.', 'error');
-        }
         const stockDoc = availableStockSnap.docs[0];
         const uniPinCode = stockDoc.data().code;
-
         const userRef = db.collection('users').doc(currentUser.uid);
         const orderRef = db.collection('orders').doc(); 
 
@@ -1384,17 +1361,13 @@
             }).catch(err => console.error("Auto TopUp API Error:", err)); 
 
             Swal.fire({
-                icon: 'info',
-                title: 'Processing Order',
-                text: 'Your top-up is being processed automatically. Please wait.',
-                timer: 7000,
-                timerProgressBar: true,
-                didOpen: () => { Swal.showLoading() }
+                icon: 'info', title: 'Processing Order', text: 'Top-up is processing automatically...',
+                timer: 7000, timerProgressBar: true, didOpen: () => { Swal.showLoading() }
             });
 
             setTimeout(() => {
                 orderRef.update({ status: 'success' }).then(() => {
-                    Swal.fire('Success!', 'Your Top-Up has been completed successfully.', 'success');
+                    Swal.fire('Success!', 'Top-Up completed successfully.', 'success');
                     showSec('home');
                 });
             }, 7000);
@@ -1406,63 +1379,31 @@
     function uidCheck() {
         const uid = document.getElementById("game-player-id").value.trim();
         const box = document.getElementById("uidCheckBtn");
+        if (!uid) { box.innerHTML = "Please enter a UID!"; return; }
+        if (!dynamicUidApiUrl) { Swal.fire('Notice', 'UID Check API not configured!', 'info'); return; }
 
-        if (!uid) {
-            box.innerHTML = "Please enter a UID!";
-            return;
-        }
-
-        if (!dynamicUidApiUrl) {
-            Swal.fire('Notice', 'UID Check API is not configured in Admin Panel!', 'info');
-            return;
-        }
-
-        box.classList.remove("bg-black", "bg-red-600");
-        box.classList.add("bg-gradient-to-r", "from-blue-400", "to-teal-400");
+        box.className = "mt-3 bg-gradient-to-r from-blue-400 to-teal-400 text-white text-center py-2 rounded-lg font-bold text-sm shadow-md cursor-pointer";
         box.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking Player Name...';
         
-        let finalApiURL = dynamicUidApiUrl.includes("{uid}") 
-            ? dynamicUidApiUrl.replace("{uid}", uid) 
-            : `${dynamicUidApiUrl}${uid}`;
-
+        let finalApiURL = dynamicUidApiUrl.includes("{uid}") ? dynamicUidApiUrl.replace("{uid}", uid) : `${dynamicUidApiUrl}${uid}`;
         if (dynamicUidApiKey && !finalApiURL.includes("key=") && !finalApiURL.includes("api=")) {
-            const separator = finalApiURL.includes("?") ? "&" : "?";
-            finalApiURL += `${separator}key=${dynamicUidApiKey}`;
+            finalApiURL += `${finalApiURL.includes("?") ? "&" : "?"}key=${dynamicUidApiKey}`;
         }
 
-        const fetchOptions = {};
-        if (dynamicUidApiKey) {
-            fetchOptions.headers = { 
-                'Authorization': `Bearer ${dynamicUidApiKey}`, 
-                'x-api-key': dynamicUidApiKey 
-            };
-        }
-
-        fetch(finalApiURL, fetchOptions)
+        fetch(finalApiURL, { headers: dynamicUidApiKey ? { 'Authorization': `Bearer ${dynamicUidApiKey}`, 'x-api-key': dynamicUidApiKey } : {} })
             .then(res => res.json())
             .then(data => {
-                let name = (data.basicInfo && data.basicInfo.nickname) 
-                           || (data.player && (data.player.nickname || data.player.name))
-                           || (data.data && (data.data.nickname || data.data.name || data.data.username || (data.data.basicInfo && data.data.basicInfo.nickname)))
-                           || data.nickname 
-                           || data.name 
-                           || data.username 
-                           || data.player_name;
-
+                let name = (data.basicInfo && data.basicInfo.nickname) || (data.player && (data.player.nickname || data.player.name)) || (data.data && (data.data.nickname || data.data.name)) || data.nickname || data.name;
                 if (name) {
-                    box.classList.remove("bg-gradient-to-r", "from-blue-400", "to-teal-400");
-                    box.classList.add("bg-black");
+                    box.className = "mt-3 bg-black text-white text-center py-2 rounded-lg font-bold text-sm shadow-md";
                     box.innerHTML = `<i class="fas fa-check-circle text-green-400 mr-1"></i> ${name}`;
                 } else {
-                    box.classList.remove("bg-gradient-to-r", "from-blue-400", "to-teal-400");
-                    box.classList.add("bg-red-600");
-                    box.innerHTML = data.message || data.error || "Invalid UID!";
+                    box.className = "mt-3 bg-red-600 text-white text-center py-2 rounded-lg font-bold text-sm shadow-md";
+                    box.innerHTML = data.message || "Invalid UID!";
                 }
             })
-            .catch((err) => {
-                console.error("UID API Error:", err);
-                box.classList.remove("bg-gradient-to-r", "from-blue-400", "to-teal-400");
-                box.classList.add("bg-red-600");
+            .catch(() => {
+                box.className = "mt-3 bg-red-600 text-white text-center py-2 rounded-lg font-bold text-sm shadow-md";
                 box.innerHTML = "Server Busy / Try Again!";
             });
     }
@@ -1495,8 +1436,7 @@
                     list.innerHTML = `<div class="flex flex-col items-center justify-center py-10 text-gray-400"><i class="fas fa-shopping-basket text-4xl mb-3 opacity-30"></i><p>No orders found yet.</p></div>`;
                     return;
                 }
-
-                const orders = [];
+                let orders = [];
                 snapshot.forEach(doc => orders.push(doc.data()));
                 orders.sort((a, b) => (b.date ? b.date.toDate() : 0) - (a.date ? a.date.toDate() : 0));
 
@@ -1506,11 +1446,9 @@
                     let icon = "fa-clock";
                     const status = d.status ? d.status.toLowerCase() : 'pending';
                     if (status === 'success' || status === 'complete' || status === 'completed') {
-                        statusColor = "bg-green-100 text-green-700 border-green-500";
-                        icon = "fa-check-circle";
+                        statusColor = "bg-green-100 text-green-700 border-green-500"; icon = "fa-check-circle";
                     } else if (status === 'cancel' || status === 'rejected') {
-                        statusColor = "bg-red-100 text-red-700 border-red-500";
-                        icon = "fa-times-circle";
+                        statusColor = "bg-red-100 text-red-700 border-red-500"; icon = "fa-times-circle";
                     }
 
                     let dateStr = d.date && d.date.toDate ? d.date.toDate().toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true }) : "N/A";
@@ -1548,10 +1486,7 @@
                             </div>
                         </div>`;
                 });
-            }).catch(err => {
-                console.error("Order History Error:", err);
-                list.innerHTML = `<div class="text-center text-red-400 py-4 text-xs">Failed to load history</div>`;
-            });
+            }).catch(() => list.innerHTML = `<div class="text-center text-red-400 py-4 text-xs">Failed to load history</div>`);
     }
 
     function loadRecentOrdersGlobal() {
@@ -1566,11 +1501,9 @@
                   let statusText = (data.status || 'pending').toLowerCase();
                   let statusBadgeClass = 'bg-red-500 text-white';
                   if (['success', 'complete', 'completed'].includes(statusText)) {
-                      statusBadgeClass = 'bg-[#198754] text-white';
-                      statusText = 'completed';
+                      statusBadgeClass = 'bg-[#198754] text-white'; statusText = 'completed';
                   } else if (['pending', 'processing'].includes(statusText)) {
-                      statusBadgeClass = 'bg-[#ffc107] text-gray-800';
-                      statusText = 'processing';
+                      statusBadgeClass = 'bg-[#ffc107] text-gray-800'; statusText = 'processing';
                   }
                   container.innerHTML += `<div class="bg-white p-3 rounded-xl shadow-[0_2px_10px_rgba(0,0,0,0.03)] border border-gray-100 flex items-center justify-between"><div class="flex items-center gap-3 overflow-hidden"><div class="w-11 h-11 min-w-[44px] bg-[#0d6efd] rounded-full flex items-center justify-center text-white text-lg font-sans font-medium shadow-sm">${displayName.charAt(0).toUpperCase()}</div><div class="flex flex-col truncate"><span class="text-gray-600 font-bold text-sm truncate">${displayName}</span><span class="text-gray-500 text-[11px] font-medium truncate">${data.productName} - ${data.price} ৳</span></div></div><div class="${statusBadgeClass} px-3 py-1 rounded-full text-[10px] font-bold capitalize shadow-sm whitespace-nowrap ml-2">${statusText}</div></div>`;
               });
@@ -1592,7 +1525,6 @@
             let banners = [];
             snapshot.forEach(doc => banners.push(doc.data()));
             banners.sort((a,b) => (a.order || 0) - (b.order || 0));
-
             banners.forEach((b) => { if(b.image) slidesHTML += `<img src="${b.image}" class="w-full h-full object-cover flex-shrink-0">`; });
             if(slidesHTML) { wrapper.innerHTML = slidesHTML; startSlider(); }
         });
@@ -1615,7 +1547,6 @@
         const addMoneyContent = document.getElementById('add-money-content');
         const historyContent = document.getElementById('deposit-history-content');
         const btnToggle = document.getElementById('btn-history-toggle');
-
         if (view === 'form') {
             addMoneyContent.classList.remove('hidden');
             historyContent.classList.add('hidden');
@@ -1642,7 +1573,6 @@
                     list.innerHTML = `<div class="flex flex-col items-center justify-center py-10 text-gray-400"><i class="fas fa-receipt text-4xl mb-3 opacity-30"></i><p>No deposit history found.</p></div>`;
                     return;
                 }
-                
                 let deposits = [];
                 snapshot.forEach(doc => deposits.push(doc.data()));
                 deposits.sort((a, b) => (b.date ? b.date.toDate() : 0) - (a.date ? a.date.toDate() : 0));
@@ -1651,7 +1581,6 @@
                 deposits.forEach(d => {
                     let statusColor = d.status === 'success' || d.status === 'approved' ? "bg-green-100 text-green-700" : (d.status === 'rejected' ? "bg-red-100 text-red-700" : "bg-yellow-100 text-yellow-700");
                     let dateStr = d.date && d.date.toDate ? d.date.toDate().toLocaleString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : "N/A";
-
                     list.innerHTML += `
                         <div class="bg-white p-3 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between mb-2">
                             <div class="flex-grow">
@@ -1664,14 +1593,10 @@
                             </div>
                         </div>`;
                 });
-            }).catch(err => {
-                console.error("Deposit History Error:", err);
-                list.innerHTML = `<div class="text-center text-red-400 py-4 text-xs">Failed to load history</div>`;
-            });
+            }).catch(() => list.innerHTML = `<div class="text-center text-red-400 py-4 text-xs">Failed to load history</div>`);
     }
 
     let selectedGatewayKey = "";
-
     function selectGateway(gatewayKey, gatewayName, gatewayNumber, logoUrl, gatewayType) {
         selectedGatewayKey = gatewayKey;
         document.getElementById('payment-gateways-grid').classList.add('hidden');
@@ -1696,16 +1621,10 @@
         if(!amt || !trx) return Swal.fire('Error', 'Fill all fields', 'warning');
         
         const gatewayName = paymentGatewaysData[selectedGatewayKey] ? paymentGatewaysData[selectedGatewayKey].name : "Manual Payment";
-
         Swal.showLoading();
         db.collection('deposits').add({
-            userId: currentUser.uid, 
-            amount: parseInt(amt), 
-            trxId: trx, 
-            method: gatewayName,
-            status: 'pending', 
-            date: new Date(), 
-            userEmail: currentUser.email
+            userId: currentUser.uid, amount: parseInt(amt), trxId: trx, method: gatewayName,
+            status: 'pending', date: new Date(), userEmail: currentUser.email
         }).then(() => {
             Swal.fire('Submitted', 'Your payment request has been sent successfully.', 'success');
             resetAddMoney();
