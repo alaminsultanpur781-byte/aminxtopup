@@ -18,7 +18,7 @@
     <style>
         *{ margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif; }
         body{ background:#f1f5f9; color:#1e293b; overflow-x:hidden; }
-        .nav-gradient { background: #ffffff; color: #0f172a; border-bottom: 1px solid #e2e8f0; box-shadow: 0 2px 10px rgba(0,0,0,0.03); }
+        .nav-gradient { background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(10px); color: #0f172a; border-bottom: 1px solid #e2e8f0; box-shadow: 0 2px 10px rgba(0,0,0,0.03); }
         .active-tab { color: #0284c7 !important; font-weight: 700; }
         .hidden { display: none !important; }
         
@@ -29,7 +29,7 @@
         .gateway-card { 
             transition: all 0.25s ease; 
             border: 1.5px solid #e2e8f0; 
-            background: #ffffff; 
+            background: rgba(255, 255, 255, 0.95); 
             border-radius: 18px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.03);
         }
@@ -41,7 +41,7 @@
 
         .product-card {
             border: 1.5px solid #e2e8f0;
-            background: #ffffff;
+            background: rgba(255, 255, 255, 0.95);
             padding: 14px;
             border-radius: 14px;
             display: flex;
@@ -58,7 +58,7 @@
 
         .pay-option-card {
             border: 1.5px solid #e2e8f0;
-            background: #ffffff;
+            background: rgba(255, 255, 255, 0.95);
             border-radius: 16px;
             padding: 14px;
             cursor: pointer;
@@ -74,6 +74,217 @@
         #fab-container.is-open #fab-icon-open { transform: rotate(-180deg) scale(0); opacity: 0; }
         #fab-container.is-open #fab-icon-close { transform: scale(1) rotate(0); opacity: 1; }
         #fab-container.is-open #fab-options { transform: translateY(0); opacity: 1; pointer-events: auto; }
+
+        /* --- LOGO BUILD / DRAW & PERIODIC SPARKLE ANIMATIONS --- */
+        .logo-3d-wrap {
+            perspective: 800px;
+            transform-style: preserve-3d;
+            position: relative;
+        }
+        .logo-build-sparkle {
+            position: relative;
+            display: inline-block;
+            transform-style: preserve-3d;
+            animation: logoBuildReveal 1.25s cubic-bezier(0.22, 1, 0.36, 1) both, periodicSparkleGleam 4.5s ease-in-out 1.25s infinite;
+        }
+        .logo-build-sparkle::after {
+            content: "";
+            position: absolute;
+            top: -15%;
+            left: -120%;
+            width: 65%;
+            height: 130%;
+            background: linear-gradient(
+                115deg,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.15) 35%,
+                rgba(255, 255, 255, 0.85) 50%,
+                rgba(255, 255, 255, 0.15) 65%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            transform: skewX(-22deg);
+            pointer-events: none;
+            animation: periodicShimmerSweep 4.5s ease-in-out 1.25s infinite;
+        }
+        @keyframes logoBuildReveal {
+            0% {
+                opacity: 0;
+                transform: scale(0.35) rotateY(-65deg) rotateX(25deg);
+                filter: brightness(2.2) drop-shadow(0 0 24px rgba(56, 189, 248, 0.95));
+            }
+            60% {
+                opacity: 1;
+                transform: scale(1.08) rotateY(10deg) rotateX(-4deg);
+                filter: brightness(1.35) drop-shadow(0 0 18px rgba(56, 189, 248, 0.7));
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) rotateY(0deg) rotateX(0deg);
+                filter: brightness(1) drop-shadow(0 6px 14px rgba(2, 132, 199, 0.32));
+            }
+        }
+        @keyframes periodicSparkleGleam {
+            0%, 72%, 100% {
+                transform: scale(1) rotateY(0deg);
+                filter: brightness(1) drop-shadow(0 6px 14px rgba(2, 132, 199, 0.3));
+            }
+            80% {
+                transform: scale(1.06) rotateY(8deg);
+                filter: brightness(1.45) drop-shadow(0 0 22px rgba(255, 255, 255, 0.95)) drop-shadow(0 0 28px rgba(56, 189, 248, 0.85));
+            }
+            88% {
+                transform: scale(1) rotateY(0deg);
+                filter: brightness(1.05) drop-shadow(0 6px 14px rgba(2, 132, 199, 0.35));
+            }
+        }
+        @keyframes periodicShimmerSweep {
+            0%, 72%, 100% {
+                left: -120%;
+                opacity: 0;
+            }
+            76% {
+                opacity: 1;
+            }
+            90% {
+                left: 150%;
+                opacity: 1;
+            }
+            92% {
+                left: 150%;
+                opacity: 0;
+            }
+        }
+
+        .logo-3d-anim {
+            transform-style: preserve-3d;
+            animation: logo3DTiltFloat 4.5s ease-in-out infinite;
+            filter: drop-shadow(0 8px 16px rgba(14, 165, 233, 0.28));
+        }
+        .logo-3d-header {
+            transform-style: preserve-3d;
+            animation: headerLogo3D 5s ease-in-out infinite;
+            filter: drop-shadow(0 4px 10px rgba(2, 132, 199, 0.25));
+        }
+        @keyframes logo3DTiltFloat {
+            0%, 100% {
+                transform: translateY(0px) rotateY(-14deg) rotateX(8deg) scale(1);
+            }
+            50% {
+                transform: translateY(-7px) rotateY(16deg) rotateX(-6deg) scale(1.04);
+            }
+        }
+        @keyframes headerLogo3D {
+            0%, 100% {
+                transform: rotateY(-12deg) rotateX(5deg) scale(1);
+            }
+            50% {
+                transform: rotateY(14deg) rotateX(-5deg) scale(1.03);
+            }
+        }
+
+        .real-diamond-3d {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            perspective: 700px;
+            transform-style: preserve-3d;
+        }
+        .real-diamond-inner {
+            transform-style: preserve-3d;
+            animation: realDiamondSpin3D 5.5s ease-in-out infinite;
+            filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.75)) drop-shadow(0 4px 8px rgba(3, 105, 161, 0.45));
+        }
+        @keyframes realDiamondSpin3D {
+            0% {
+                transform: translateY(0px) rotateY(0deg) rotateX(10deg) scale(1);
+            }
+            25% {
+                transform: translateY(-3px) rotateY(90deg) rotateX(-6deg) scale(1.06);
+            }
+            50% {
+                transform: translateY(0px) rotateY(180deg) rotateX(10deg) scale(1);
+            }
+            75% {
+                transform: translateY(-3px) rotateY(270deg) rotateX(-6deg) scale(1.06);
+            }
+            100% {
+                transform: translateY(0px) rotateY(360deg) rotateX(10deg) scale(1);
+            }
+        }
+
+        .diamond-bg-layer {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
+            perspective: 1000px;
+        }
+        .app-diamond-layer {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 28rem;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 1;
+            perspective: 1000px;
+        }
+        .diamond-3d {
+            position: absolute;
+            bottom: -60px;
+            transform-style: preserve-3d;
+            animation: diamondFloat3D linear infinite;
+            filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.65));
+        }
+        .app-diamond-3d {
+            position: absolute;
+            bottom: -60px;
+            transform-style: preserve-3d;
+            animation: appDiamondFloat3D linear infinite;
+            filter: drop-shadow(0 4px 10px rgba(2, 132, 199, 0.35));
+        }
+        @keyframes diamondFloat3D {
+            0% {
+                transform: translateY(0) rotateY(0deg) rotateX(15deg) scale(0.7);
+                opacity: 0;
+            }
+            15% {
+                opacity: 0.85;
+            }
+            50% {
+                transform: translateY(-55vh) rotateY(180deg) rotateX(-15deg) scale(1);
+            }
+            85% {
+                opacity: 0.85;
+            }
+            100% {
+                transform: translateY(-115vh) rotateY(360deg) rotateX(15deg) scale(0.7);
+                opacity: 0;
+            }
+        }
+        @keyframes appDiamondFloat3D {
+            0% {
+                transform: translateY(0) rotateY(0deg) rotateZ(-10deg) scale(0.8);
+                opacity: 0;
+            }
+            20% {
+                opacity: 0.38;
+            }
+            50% {
+                transform: translateY(-55vh) rotateY(180deg) rotateZ(10deg) scale(1.05);
+            }
+            80% {
+                opacity: 0.38;
+            }
+            100% {
+                transform: translateY(-115vh) rotateY(360deg) rotateZ(-10deg) scale(0.8);
+                opacity: 0;
+            }
+        }
 
         /* --- PROFESSIONAL GAMING THEME AUTH STYLES --- */
         .auth-body-wrapper {
@@ -126,6 +337,7 @@
             border:1.5px solid rgba(0, 245, 136, 0.35);
             border-radius:26px;
             position:relative;
+            z-index: 10;
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), 0 0 30px rgba(0, 245, 136, 0.1);
             backdrop-filter:blur(20px);
             animation:cardEnter 0.8s cubic-bezier(0.16, 1, 0.3, 1);
@@ -137,9 +349,10 @@
 
         .aminx-logo{
             width:85px; height:85px; display:block; object-fit:contain; margin:0 auto 12px;
-            filter:drop-shadow(0 0 15px rgba(0, 245, 136, 0.5)); animation:logoFloat 3s ease-in-out infinite;
+            transform-style: preserve-3d;
+            animation: logo3DTiltFloat 4.5s ease-in-out infinite;
+            filter: drop-shadow(0 0 18px rgba(0, 245, 136, 0.55)) drop-shadow(0 8px 14px rgba(0, 210, 255, 0.3));
         }
-        @keyframes logoFloat{ 0%,100%{transform:translateY(0);} 50%{transform:translateY(-6px);} }
 
         .brand-title {
             font-size: 32px;
@@ -206,11 +419,22 @@
         <div class="orb two"></div>
     </div>
     <div class="particles" id="particles"></div>
+    <!-- 3D Diamonds Layer for Auth Theme -->
+    <div class="diamond-bg-layer" id="auth-diamonds"></div>
 
     <div class="login-card my-auto">
         <div class="text-center mb-6">
-            <img id="auth-logo-img" src="https://placehold.co/100x100?text=Logo" class="aminx-logo" alt="Logo">
-            <h1 class="brand-title">AminX <span>Topup</span></h1>
+            <div class="logo-3d-wrap">
+                <span class="logo-build-sparkle rounded-2xl overflow-hidden">
+                    <img id="auth-logo-img" src="https://placehold.co/100x100?text=Logo" class="aminx-logo" alt="Logo">
+                </span>
+            </div>
+            <div class="flex items-center justify-center gap-2">
+                <h1 class="brand-title">AminX <span>Topup</span></h1>
+                <span class="real-diamond-3d" title="Diamond">
+                    <span class="real-diamond-inner" id="auth-title-diamond"></span>
+                </span>
+            </div>
             <p id="auth-subtitle" class="text-[#8ca898] text-xs mt-1.5 font-medium">Welcome Back! Login to Continue</p>
         </div>
 
@@ -307,10 +531,19 @@
 
 <!-- APP CONTENT -->
 <div id="app-content" class="hidden relative max-w-md mx-auto bg-[#f1f5f9] min-h-screen shadow-2xl text-gray-900 border-x border-gray-200">
+    <!-- 3D Diamonds Layer for App Theme -->
+    <div class="app-diamond-layer" id="app-diamonds"></div>
+
     <!-- Header -->
     <header class="nav-gradient p-4 sticky top-0 z-40 flex justify-between items-center shadow-sm">
-        <div class="flex items-center gap-2">
-            <img id="header-logo-img" src="https://placehold.co/150x50?text=Logo" class="h-8 object-contain">
+        <div class="flex items-center gap-2 logo-3d-wrap">
+            <span class="logo-build-sparkle rounded-lg overflow-hidden">
+                <img id="header-logo-img" src="https://placehold.co/150x50?text=Logo" class="h-8 object-contain logo-3d-header">
+            </span>
+            <!-- Realistic 3D Diamond Beside Logo -->
+            <span class="real-diamond-3d ml-0.5" title="Diamond Topup">
+                <span class="real-diamond-inner" id="header-real-diamond"></span>
+            </span>
         </div>
         <div class="bg-gradient-to-r from-sky-600 to-blue-600 px-4 py-2 rounded-full text-sm font-extrabold text-white shadow-sm">
             <i class="fas fa-wallet mr-1"></i> ৳ <span id="header-balance">0</span>
@@ -318,7 +551,7 @@
     </header>
 
     <!-- Notice Section -->
-    <div class="bg-amber-50 text-amber-800 border-y border-amber-200 py-2.5 overflow-hidden shadow-inner flex items-center">
+    <div class="bg-amber-50 text-amber-800 border-y border-amber-200 py-2.5 overflow-hidden shadow-inner flex items-center relative z-10">
         <div class="px-3 bg-amber-500 h-full flex items-center z-10 font-bold text-xs uppercase tracking-wider text-white">Notice</div>
         <div class="flex-1 overflow-hidden relative">
             <div id="notice-text" class="notice-scroll text-xs font-medium pl-4">স্বাগতম আমাদের অ্যাপে...</div>
@@ -326,7 +559,7 @@
     </div>
 
     <!-- Main Container -->
-    <main class="p-3 relative pb-28">
+    <main class="p-3 relative pb-28 z-10">
         
         <!-- HOME SECTION -->
         <section id="home-sec" class="animate-fade-in">
@@ -340,21 +573,21 @@
 
             <!-- CONTACT & APP GRID -->
             <div class="grid grid-cols-3 gap-3 mb-6 px-1">
-                <a id="home-whatsapp" href="#" target="_blank" class="bg-white border border-gray-200 py-3 rounded-2xl shadow-sm flex flex-col items-center justify-center gap-1.5 active:scale-95 transition h-24 no-underline group hover:border-sky-500">
+                <a id="home-whatsapp" href="#" target="_blank" class="bg-white/95 border border-gray-200 py-3 rounded-2xl shadow-sm flex flex-col items-center justify-center gap-1.5 active:scale-95 transition h-24 no-underline group hover:border-sky-500">
                     <div class="w-10 h-10 rounded-full flex items-center justify-center bg-green-50">
                         <i class="fab fa-whatsapp text-2xl text-[#25D366]"></i>
                     </div>
                     <span class="text-[11px] font-bold text-gray-700 group-hover:text-sky-600 transition">WhatsApp</span>
                 </a>
 
-                <a id="home-telegram" href="#" target="_blank" class="bg-white border border-gray-200 py-3 rounded-2xl shadow-sm flex flex-col items-center justify-center gap-1.5 active:scale-95 transition h-24 no-underline group hover:border-sky-500">
+                <a id="home-telegram" href="#" target="_blank" class="bg-white/95 border border-gray-200 py-3 rounded-2xl shadow-sm flex flex-col items-center justify-center gap-1.5 active:scale-95 transition h-24 no-underline group hover:border-sky-500">
                     <div class="w-10 h-10 rounded-full flex items-center justify-center bg-sky-50">
                         <i class="fab fa-telegram-plane text-2xl text-[#0088cc]"></i>
                     </div>
                     <span class="text-[11px] font-bold text-gray-700 group-hover:text-sky-600 transition">Telegram</span>
                 </a>
 
-                <a id="home-app-dl" href="#" target="_blank" class="bg-white border border-gray-200 py-3 rounded-2xl shadow-sm flex flex-col items-center justify-center gap-1.5 active:scale-95 transition h-24 no-underline group hover:border-sky-500">
+                <a id="home-app-dl" href="#" target="_blank" class="bg-white/95 border border-gray-200 py-3 rounded-2xl shadow-sm flex flex-col items-center justify-center gap-1.5 active:scale-95 transition h-24 no-underline group hover:border-sky-500">
                     <div class="w-10 h-10 rounded-full overflow-hidden shadow-xs bg-gray-100">
                         <img id="user-app-dl-img" src="https://i.ibb.co/WvrTGr5Y/google-play-store-logo-1273375-804.jpg" class="w-full h-full object-cover" alt="App DL">
                     </div>
@@ -392,9 +625,16 @@
             </div>
             
             <!-- FOOTER SECTION -->
-            <div class="mt-8 bg-white border border-gray-200 p-5 rounded-2xl shadow-sm">
-                <div class="text-center mb-5">
-                    <img id="about-logo-img" src="https://placehold.co/150x50?text=Logo" class="h-10 mx-auto object-contain mb-2 filter drop-shadow">
+            <div class="mt-8 bg-white/95 border border-gray-200 p-5 rounded-2xl shadow-sm">
+                <div class="text-center mb-5 logo-3d-wrap">
+                    <div class="inline-flex items-center justify-center gap-2 mb-2">
+                        <span class="logo-build-sparkle rounded-xl overflow-hidden">
+                            <img id="about-logo-img" src="https://placehold.co/150x50?text=Logo" class="h-10 object-contain logo-3d-anim">
+                        </span>
+                        <span class="real-diamond-3d" title="Real Diamond">
+                            <span class="real-diamond-inner" id="about-real-diamond"></span>
+                        </span>
+                    </div>
                     <h2 id="about-site-name" class="text-lg font-bold text-gray-900">App Name</h2>
                     <p class="text-xs text-gray-500 mt-1">Free Fire Diamond TopUp<br>Largest TopUp Site In Bangladesh</p>
                 </div>
@@ -466,7 +706,7 @@
                 <h2 class="text-lg font-bold text-gray-900" id="topup-game-title">Game Name</h2>
             </div>
 
-            <div class="bg-white p-4 rounded-2xl shadow-sm flex items-center gap-4 mb-4 border border-gray-200">
+            <div class="bg-white/95 p-4 rounded-2xl shadow-sm flex items-center gap-4 mb-4 border border-gray-200">
                 <img id="topup-game-img" src="" class="w-16 h-16 rounded-xl object-cover shadow-xs border border-gray-200">
                 <div>
                     <h3 class="font-bold text-gray-900 text-base" id="topup-sub-title">FF UID TOPUP (BD)</h3>
@@ -474,7 +714,7 @@
                 </div>
             </div>
 
-            <div class="bg-white p-4 rounded-2xl shadow-sm mb-4 border border-gray-200">
+            <div class="bg-white/95 p-4 rounded-2xl shadow-sm mb-4 border border-gray-200">
                 <div id="player-id-section">
                     <div class="flex items-center gap-2 mb-3">
                         <span class="bg-sky-600 text-white w-6 h-6 flex items-center justify-center rounded-full text-xs font-bold shadow-xs">1</span>
@@ -488,7 +728,7 @@
                 </div>
             </div>
 
-            <div class="bg-white p-4 rounded-2xl shadow-sm mb-4 border border-gray-200">
+            <div class="bg-white/95 p-4 rounded-2xl shadow-sm mb-4 border border-gray-200">
                 <div class="flex items-center gap-2 mb-4">
                     <span class="bg-sky-600 text-white w-6 h-6 flex items-center justify-center rounded-full text-xs font-bold shadow-xs">2</span>
                     <h3 class="font-bold text-gray-800 text-sm">Select Recharge</h3>
@@ -502,7 +742,7 @@
             </div>
 
             <!-- PAYMENT METHODS SECTION -->
-            <div class="bg-white p-4 rounded-2xl shadow-sm mb-4 border border-gray-200">
+            <div class="bg-white/95 p-4 rounded-2xl shadow-sm mb-4 border border-gray-200">
                 <div class="flex items-center gap-2 mb-4">
                     <span class="bg-sky-600 text-white w-6 h-6 flex items-center justify-center rounded-full text-xs font-bold shadow-xs">3</span>
                     <h3 class="font-bold text-gray-800 text-sm">Payment Methods</h3>
@@ -532,7 +772,7 @@
                 </div>
             </div>
 
-            <div class="bg-white p-4 rounded-2xl shadow-sm mb-4 border border-gray-200">
+            <div class="bg-white/95 p-4 rounded-2xl shadow-sm mb-4 border border-gray-200">
                 <div>
                     <div class="flex justify-between items-center mb-3">
                         <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Total Payable</span>
@@ -561,7 +801,7 @@
             </div>
             
             <div id="manual-payment-view">
-                <div class="flex bg-white p-1.5 rounded-2xl shadow-sm border border-gray-200 mb-5">
+                <div class="flex bg-white/95 p-1.5 rounded-2xl shadow-sm border border-gray-200 mb-5">
                     <button onclick="switchGatewayTab('all')" id="tab-all-gateway" class="flex-1 py-2.5 rounded-xl font-bold text-xs bg-sky-600 text-white transition shadow-sm">সব পদ্ধতি</button>
                     <button onclick="switchGatewayTab('mfs')" id="tab-mfs-gateway" class="flex-1 py-2.5 rounded-xl font-bold text-xs text-gray-500 hover:text-gray-900 transition">মোবাইল ব্যাংকিং</button>
                 </div>
@@ -569,7 +809,7 @@
                 <div id="add-money-content">
                     <div id="payment-gateways-grid" class="grid grid-cols-2 gap-3 mb-6"></div>
 
-                    <div id="payment-form-container" class="hidden bg-white p-5 rounded-2xl shadow-sm border border-gray-200">
+                    <div id="payment-form-container" class="hidden bg-white/95 p-5 rounded-2xl shadow-sm border border-gray-200">
                         <div class="flex justify-between items-center mb-4">
                             <div class="flex items-center gap-2">
                                 <img id="form-logo" src="" class="w-8 h-8 object-contain">
@@ -620,7 +860,7 @@
 
         <!-- ACCOUNT SECTION -->
         <section id="account-sec" class="hidden animate-fade-in">
-            <div class="bg-white p-6 rounded-2xl shadow-sm mb-4 text-center border border-gray-200">
+            <div class="bg-white/95 p-6 rounded-2xl shadow-sm mb-4 text-center border border-gray-200">
                 <div class="w-20 h-20 bg-gray-100 rounded-full mx-auto flex items-center justify-center text-sky-600 text-3xl mb-3 shadow-inner overflow-hidden border border-gray-200">
                     <img id="profile-avatar" src="" class="w-full h-full object-cover hidden">
                     <i id="profile-default-icon" class="fas fa-user-circle text-5xl"></i>
@@ -656,7 +896,7 @@
                 </div>
             </div>
 
-            <div class="bg-white rounded-2xl shadow-sm overflow-hidden border border-gray-200">
+            <div class="bg-white/95 rounded-2xl shadow-sm overflow-hidden border border-gray-200">
                 <button onclick="showSec('history')" class="w-full flex items-center justify-between p-4 border-b border-gray-100 hover:bg-gray-50 transition">
                     <div class="flex items-center gap-3">
                         <div class="w-8 h-8 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600"><i class="fas fa-history"></i></div>
@@ -717,7 +957,7 @@
     </div>
 
     <!-- Bottom Navigation -->
-    <nav class="fixed bottom-0 w-full bg-white border-t border-gray-200 py-2.5 px-6 shadow-lg z-40 max-w-md mx-auto left-0 right-0 backdrop-blur-xl">
+    <nav class="fixed bottom-0 w-full bg-white/95 border-t border-gray-200 py-2.5 px-6 shadow-lg z-40 max-w-md mx-auto left-0 right-0 backdrop-blur-xl">
         <div class="flex justify-between items-center">
             <button onclick="showSec('home')" class="nav-item flex flex-col items-center text-gray-500 active-tab transition" id="nav-home">
                 <i class="fas fa-home text-lg"></i><span class="text-[10px] mt-1 font-medium">Home</span>
@@ -741,15 +981,117 @@
 </div>
 
 <script>
-    // --- PARTICLES GENERATOR ---
+    // --- PARTICLES & REALISTIC 3D DIAMONDS GENERATOR ---
     const particleBox = document.getElementById("particles");
-    for(let i=0; i<35; i++){
+    for(let i=0; i<25; i++){
         const p = document.createElement("span");
         p.className = "particle";
         p.style.left = Math.random() * 100 + "%";
         p.style.animationDuration = (5 + Math.random() * 8) + "s";
         p.style.animationDelay = (Math.random() * 8) + "s";
         particleBox.appendChild(p);
+    }
+
+    function triggerLogoBuildAnimation() {
+        document.querySelectorAll('.logo-build-sparkle').forEach((el) => {
+            el.style.animation = 'none';
+            void el.offsetWidth;
+            el.style.animation = 'logoBuildReveal 1.25s cubic-bezier(0.22, 1, 0.36, 1) both, periodicSparkleGleam 4.5s ease-in-out 1.25s infinite';
+        });
+    }
+
+    function createRealisticDiamondSVG(size, uidSuffix) {
+        const gCrownLeft = `gCrownL_${uidSuffix}`;
+        const gCrownMid = `gCrownM_${uidSuffix}`;
+        const gCrownRight = `gCrownR_${uidSuffix}`;
+        const gPavLeft = `gPavL_${uidSuffix}`;
+        const gPavMid = `gPavM_${uidSuffix}`;
+        const gPavRight = `gPavR_${uidSuffix}`;
+
+        return `
+        <svg width="${size}" height="${size}" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <linearGradient id="${gCrownLeft}" x1="10" y1="12" x2="28" y2="30" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stop-color="#E0F7FF"/>
+                    <stop offset="100%" stop-color="#38BDF8"/>
+                </linearGradient>
+                <linearGradient id="${gCrownMid}" x1="40" y1="12" x2="40" y2="30" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stop-color="#FFFFFF"/>
+                    <stop offset="100%" stop-color="#7DD3FC"/>
+                </linearGradient>
+                <linearGradient id="${gCrownRight}" x1="52" y1="12" x2="70" y2="30" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stop-color="#7DD3FC"/>
+                    <stop offset="100%" stop-color="#0284C7"/>
+                </linearGradient>
+                <linearGradient id="${gPavLeft}" x1="8" y1="30" x2="40" y2="70" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stop-color="#0EA5E9"/>
+                    <stop offset="100%" stop-color="#0369A1"/>
+                </linearGradient>
+                <linearGradient id="${gPavMid}" x1="40" y1="30" x2="40" y2="70" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stop-color="#38BDF8"/>
+                    <stop offset="60%" stop-color="#0284C7"/>
+                    <stop offset="100%" stop-color="#075985"/>
+                </linearGradient>
+                <linearGradient id="${gPavRight}" x1="72" y1="30" x2="40" y2="70" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stop-color="#0369A1"/>
+                    <stop offset="100%" stop-color="#0C4A6E"/>
+                </linearGradient>
+            </defs>
+
+            <!-- Crown Top Facets -->
+            <polygon points="22,12 58,12 72,30 8,30" fill="#38BDF8"/>
+            <polygon points="22,12 28,30 8,30" fill="url(#${gCrownLeft})"/>
+            <polygon points="22,12 58,12 52,30 28,30" fill="url(#${gCrownMid})"/>
+            <polygon points="58,12 72,30 52,30" fill="url(#${gCrownRight})"/>
+
+            <!-- Pavilion Bottom Facets -->
+            <polygon points="8,30 28,30 40,70" fill="url(#${gPavLeft})"/>
+            <polygon points="28,30 52,30 40,70" fill="url(#${gPavMid})"/>
+            <polygon points="52,30 72,30 40,70" fill="url(#${gPavRight})"/>
+
+            <!-- Crisp Facet Lines -->
+            <line x1="8" y1="30" x2="72" y2="30" stroke="#E0F2FE" stroke-width="1.2" stroke-opacity="0.9"/>
+            <line x1="22" y1="12" x2="28" y2="30" stroke="#FFFFFF" stroke-width="1" stroke-opacity="0.7"/>
+            <line x1="58" y1="12" x2="52" y2="30" stroke="#FFFFFF" stroke-width="1" stroke-opacity="0.7"/>
+            <line x1="28" y1="30" x2="40" y2="70" stroke="#BAE6FD" stroke-width="1" stroke-opacity="0.65"/>
+            <line x1="52" y1="30" x2="40" y2="70" stroke="#7DD3FC" stroke-width="1" stroke-opacity="0.65"/>
+            <polygon points="22,12 58,12 72,30 40,70 8,30" stroke="#E0F7FF" stroke-width="1.3" stroke-opacity="0.85" fill="none"/>
+
+            <!-- Specular Glint / Star Sparkle -->
+            <path d="M58 8L59.6 12.4L64 14L59.6 15.6L58 20L56.4 15.6L52 14L56.4 12.4L58 8Z" fill="#FFFFFF"/>
+            <circle cx="25" cy="18" r="1.6" fill="#FFFFFF" fill-opacity="0.95"/>
+        </svg>`;
+    }
+
+    // Mount Realistic 3D Diamonds Next to Logos
+    document.getElementById("auth-title-diamond").innerHTML = createRealisticDiamondSVG(30, "authTitle");
+    document.getElementById("header-real-diamond").innerHTML = createRealisticDiamondSVG(26, "hdrLogo");
+    document.getElementById("about-real-diamond").innerHTML = createRealisticDiamondSVG(30, "abtLogo");
+
+    // Generate 3D Diamonds in Auth Theme
+    const authDiamondsBox = document.getElementById("auth-diamonds");
+    for(let i=0; i<16; i++){
+        const d = document.createElement("div");
+        d.className = "diamond-3d";
+        const size = 24 + Math.floor(Math.random() * 24);
+        d.innerHTML = createRealisticDiamondSVG(size, "authBg" + i);
+        d.style.left = Math.random() * 95 + "%";
+        d.style.animationDuration = (7 + Math.random() * 9) + "s";
+        d.style.animationDelay = (Math.random() * 8) + "s";
+        authDiamondsBox.appendChild(d);
+    }
+
+    // Generate 3D Diamonds in Main App Theme
+    const appDiamondsBox = document.getElementById("app-diamonds");
+    for(let i=0; i<14; i++){
+        const d = document.createElement("div");
+        d.className = "app-diamond-3d";
+        const size = 22 + Math.floor(Math.random() * 22);
+        d.innerHTML = createRealisticDiamondSVG(size, "appBg" + i);
+        d.style.left = Math.random() * 92 + "%";
+        d.style.animationDuration = (8 + Math.random() * 10) + "s";
+        d.style.animationDelay = (Math.random() * 9) + "s";
+        appDiamondsBox.appendChild(d);
     }
 
     // --- FIREBASE CONFIGURATION ---
@@ -794,6 +1136,7 @@
                 document.getElementById('auth-logo-img').src = logoUrl;
                 document.getElementById('header-logo-img').src = logoUrl;
                 document.getElementById('about-logo-img').src = logoUrl;
+                triggerLogoBuildAnimation();
                 document.getElementById('about-site-name').innerText = siteName;
                 document.title = siteName;
 
@@ -977,6 +1320,7 @@
             currentUser = user;
             document.getElementById('auth-sec').classList.add('hidden');
             document.getElementById('app-content').classList.remove('hidden');
+            triggerLogoBuildAnimation();
             
             if (user.photoURL) {
                 const avatarImg = document.getElementById('profile-avatar');
@@ -993,6 +1337,7 @@
             currentUser = null;
             document.getElementById('auth-sec').classList.remove('hidden');
             document.getElementById('app-content').classList.add('hidden');
+            triggerLogoBuildAnimation();
         }
     });
 
@@ -1095,7 +1440,7 @@
                     category.games.forEach(item => {
                         gamesHTML += `
                          <div onclick="openTopUpPage('${item.id}', '${item.name}', '${item.image}')" 
-                              class="bg-white rounded-2xl shadow-xs overflow-hidden cursor-pointer transform hover:-translate-y-1 transition-all duration-300 border border-gray-200 group hover:border-sky-500">
+                              class="bg-white/95 rounded-2xl shadow-xs overflow-hidden cursor-pointer transform hover:-translate-y-1 transition-all duration-300 border border-gray-200 group hover:border-sky-500">
                             <div class="w-full aspect-square bg-gray-50 overflow-hidden relative">
                                 <img src="${item.image}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" onerror="this.src='https://placehold.co/200'">
                             </div>
@@ -1117,7 +1462,7 @@
                 uncategorizedGames.forEach(item => {
                     gamesHTML += `
                      <div onclick="openTopUpPage('${item.id}', '${item.name}', '${item.image}')" 
-                          class="bg-white rounded-2xl shadow-xs overflow-hidden cursor-pointer transform hover:-translate-y-1 transition-all duration-300 border border-gray-200 group hover:border-sky-500">
+                          class="bg-white/95 rounded-2xl shadow-xs overflow-hidden cursor-pointer transform hover:-translate-y-1 transition-all duration-300 border border-gray-200 group hover:border-sky-500">
                         <div class="w-full aspect-square bg-gray-50 overflow-hidden relative">
                             <img src="${item.image}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" onerror="this.src='https://placehold.co/200'">
                         </div>
@@ -1146,7 +1491,7 @@
             tuts.sort((a,b) => (a.order || 0) - (b.order || 0));
             tuts.forEach(data => {
                 container.innerHTML += `
-                    <div class="mx-2 bg-white rounded-2xl shadow-sm overflow-hidden border border-gray-200 mb-6">
+                    <div class="mx-2 bg-white/95 rounded-2xl shadow-sm overflow-hidden border border-gray-200 mb-6">
                         <div class="relative w-full h-48 bg-gray-100 group cursor-pointer" onclick="window.open('${data.link}', '_blank')">
                             <img src="${data.thumbnail}" class="w-full h-full object-cover">
                             <div class="absolute inset-0 bg-black/40 flex items-center justify-center"><i class="fas fa-play text-white text-4xl drop-shadow-md"></i></div>
@@ -1484,7 +1829,7 @@
                         </div>`;
 
                     list.innerHTML += `
-                        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 mb-4 overflow-hidden relative">
+                        <div class="bg-white/95 rounded-2xl shadow-sm border border-gray-200 mb-4 overflow-hidden relative">
                             <div class="p-4">
                                 <div class="flex justify-between items-start mb-2.5">
                                     <div>
@@ -1526,7 +1871,7 @@
                   } else if (['pending', 'processing'].includes(statusText)) {
                       statusBadgeClass = 'bg-yellow-50 text-yellow-600 border border-yellow-200'; statusText = 'processing';
                   }
-                  container.innerHTML += `<div class="bg-white border border-gray-200 p-3.5 rounded-2xl shadow-sm flex items-center justify-between"><div class="flex items-center gap-3 overflow-hidden"><div class="w-10 h-10 min-w-[40px] bg-gradient-to-r from-sky-600 to-blue-600 rounded-full flex items-center justify-center text-white text-sm font-black shadow-xs">${displayName.charAt(0).toUpperCase()}</div><div class="flex flex-col truncate"><span class="text-gray-800 font-bold text-xs truncate">${displayName}</span><span class="text-gray-500 text-[10px] font-medium truncate mt-0.5">${data.productName} - ${data.price} ৳</span></div></div><div class="${statusBadgeClass} px-2.5 py-1 rounded-full text-[10px] font-bold capitalize shadow-xs whitespace-nowrap ml-2">${statusText}</div></div>`;
+                  container.innerHTML += `<div class="bg-white/95 border border-gray-200 p-3.5 rounded-2xl shadow-sm flex items-center justify-between"><div class="flex items-center gap-3 overflow-hidden"><div class="w-10 h-10 min-w-[40px] bg-gradient-to-r from-sky-600 to-blue-600 rounded-full flex items-center justify-center text-white text-sm font-black shadow-xs">${displayName.charAt(0).toUpperCase()}</div><div class="flex flex-col truncate"><span class="text-gray-800 font-bold text-xs truncate">${displayName}</span><span class="text-gray-500 text-[10px] font-medium truncate mt-0.5">${data.productName} - ${data.price} ৳</span></div></div><div class="${statusBadgeClass} px-2.5 py-1 rounded-full text-[10px] font-bold capitalize shadow-xs whitespace-nowrap ml-2">${statusText}</div></div>`;
               });
           });
     }
@@ -1603,7 +1948,7 @@
                     let statusColor = d.status === 'success' || d.status === 'approved' ? "bg-green-50 text-green-600 border-green-200" : (d.status === 'rejected' ? "bg-red-50 text-red-600 border-red-200" : "bg-yellow-50 text-yellow-600 border-yellow-200");
                     let dateStr = d.date && d.date.toDate ? d.date.toDate().toLocaleString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : "N/A";
                     list.innerHTML += `
-                        <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-200 flex items-center justify-between mb-3">
+                        <div class="bg-white/95 p-4 rounded-2xl shadow-sm border border-gray-200 flex items-center justify-between mb-3">
                             <div class="flex-grow">
                                 <div class="flex justify-between items-center mb-1.5">
                                     <p class="text-base font-black text-sky-600">৳${d.amount}</p>
