@@ -22,8 +22,54 @@
         .active-tab { color: #0284c7 !important; font-weight: 700; }
         .hidden { display: none !important; }
         
-        .notice-scroll { animation: scroll-left 15s linear infinite; display: inline-block; white-space: nowrap; }
-        @keyframes scroll-left { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+        /* Smooth non-clipping marquee for notice text */
+        .notice-marquee {
+            position: relative;
+            width: 100%;
+            min-width: 0;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+        }
+        .notice-scroll {
+            display: inline-block;
+            white-space: nowrap;
+            padding-left: 100%;
+            padding-right: 48px;
+            will-change: transform;
+            animation: scroll-left 28s linear infinite;
+        }
+        @keyframes scroll-left {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-100%, 0, 0); }
+        }
+
+        /* --- PERIODIC LETTER-BY-LETTER ANIMATION FOR "NOTICE" WORD ONLY --- */
+        .notice-badge-letters {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 68px;
+            flex-shrink: 0;
+        }
+        .notice-word-char {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(5px) scale(0.75);
+            transition: opacity 0.16s ease, transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .notice-word-char.shown {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+        .notice-word-pop .notice-word-char.shown {
+            animation: noticeWordLetterWave 0.65s ease;
+        }
+        @keyframes noticeWordLetterWave {
+            0% { transform: translateY(0) scale(1); text-shadow: none; }
+            45% { transform: translateY(-2px) scale(1.18); text-shadow: 0 0 8px rgba(255, 255, 255, 0.9); }
+            100% { transform: translateY(0) scale(1); text-shadow: none; }
+        }
         
         /* Pro Professional Clean White UI Cards */
         .gateway-card { 
@@ -551,10 +597,10 @@
     </header>
 
     <!-- Notice Section -->
-    <div class="bg-amber-50 text-amber-800 border-y border-amber-200 py-2.5 overflow-hidden shadow-inner flex items-center relative z-10">
-        <div class="px-3 bg-amber-500 h-full flex items-center z-10 font-bold text-xs uppercase tracking-wider text-white">Notice</div>
-        <div class="flex-1 overflow-hidden relative">
-            <div id="notice-text" class="notice-scroll text-xs font-medium pl-4">স্বাগতম আমাদের অ্যাপে...</div>
+    <div class="bg-amber-50 text-amber-800 border-y border-amber-200 py-2.5 shadow-inner flex items-center relative z-10 min-w-0">
+        <div class="px-3 bg-amber-500 py-1 rounded-r-md flex items-center z-10 font-bold text-xs uppercase tracking-wider text-white notice-badge-letters" id="notice-badge-word">NOTICE</div>
+        <div class="flex-1 min-w-0 notice-marquee">
+            <div id="notice-text" class="notice-scroll text-xs font-medium">স্বাগতম আমাদের অ্যাপে...</div>
         </div>
     </div>
 
@@ -981,6 +1027,56 @@
 </div>
 
 <script>
+    // --- PERIODIC LETTER-BY-LETTER ANIMATION FOR "NOTICE" WORD ---
+    let noticeWordStepTimer = null;
+    let noticeWordPopTimer = null;
+    let noticeWordRepeatTimer = null;
+
+    function runNoticeWordLetterAnimation() {
+        const badge = document.getElementById('notice-badge-word');
+        if (!badge) return;
+
+        clearTimeout(noticeWordStepTimer);
+        clearTimeout(noticeWordPopTimer);
+        clearTimeout(noticeWordRepeatTimer);
+
+        const word = "NOTICE";
+        badge.classList.remove('notice-word-pop');
+        badge.innerHTML = "";
+
+        const spans = [];
+        for (const ch of word) {
+            const s = document.createElement('span');
+            s.className = 'notice-word-char';
+            s.textContent = ch;
+            badge.appendChild(s);
+            spans.push(s);
+        }
+
+        let idx = 0;
+        function showNextLetter() {
+            if (idx < spans.length) {
+                spans[idx].classList.add('shown');
+                idx++;
+                noticeWordStepTimer = setTimeout(showNextLetter, 95);
+            } else {
+                noticeWordPopTimer = setTimeout(() => {
+                    badge.classList.remove('notice-word-pop');
+                    void badge.offsetWidth;
+                    badge.classList.add('notice-word-pop');
+                }, 700);
+
+                noticeWordRepeatTimer = setTimeout(() => {
+                    runNoticeWordLetterAnimation();
+                }, 4200);
+            }
+        }
+
+        showNextLetter();
+    }
+
+    runNoticeWordLetterAnimation();
+
     // --- PARTICLES & REALISTIC 3D DIAMONDS GENERATOR ---
     const particleBox = document.getElementById("particles");
     for(let i=0; i<25; i++){
@@ -1321,6 +1417,7 @@
             document.getElementById('auth-sec').classList.add('hidden');
             document.getElementById('app-content').classList.remove('hidden');
             triggerLogoBuildAnimation();
+            runNoticeWordLetterAnimation();
             
             if (user.photoURL) {
                 const avatarImg = document.getElementById('profile-avatar');
